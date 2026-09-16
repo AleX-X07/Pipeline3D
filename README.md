@@ -17,6 +17,11 @@ Other dependencies are already included directly in the external/ folder.
 
 **Always make sure to keep your graphics drivers updated !**
 
+The build process outputs executables in the bin/ folder at the root of this repository. To keep things clean, make sure your game project (or the example app) is configured to use `$(SolutionDir)bin` as the working directory (Project properties, `Debugging` panel, `Working directory` option or, in french, `Débogage` -> `Répertoire de travail`)
+
+## Running
+
+
 ## Documentation
 
 See [docs/README.md](docs/README.md) to get started.
