@@ -1,0 +1,57 @@
+site_name: Calcium3D
+site_description: Calcium3D documentation
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Light mode
+markdown_extensions:
+  - admonition
+  - attr_list
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - toc:
+      permalink: true
+
+nav:
+  - Home: README.md
+  - Getting started:
+      - First game: getting-started.md
+      - Project structure: project-structure.md
+  - Concepts:
+      - Engine model: concepts.md
+      - Game loop: game-loop.md
+      - GameObjects & Components: gameobjects-components.md
+      - Transforms: transforms.md
+  - Systems:
+      - Rendering: rendering.md
+      - Physics: physics.md
+      - Audio: audio.md
+  - API reference:
+      - Core: api/core.md
+      - Components: api/components.md
+      - Rendering API: api/rendering.md
+      - Physics API: api/physics.md
+      - Audio API: api/audio.md
+  - Guide:
+      - Example application: example-app.md
+      - Tips & notes: tips.md
+      - Gallium boundary: gallium.md

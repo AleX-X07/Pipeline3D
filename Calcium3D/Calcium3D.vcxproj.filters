@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\c3d">
+      <UniqueIdentifier>{fc491678-ca8f-4e06-b879-16a52b8cc18a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\c3d\physics">
+      <UniqueIdentifier>{a920d0ef-83ef-467b-a990-165d650f7a12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\c3d\components">
+      <UniqueIdentifier>{b9b87c22-3ae0-4248-ba6f-538da5ff2930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\c3d\components\rendering">
+      <UniqueIdentifier>{1173001b-945f-435c-af93-3ce74b148235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\components">
+      <UniqueIdentifier>{e1366f00-84e5-4efa-b99c-971d45468e81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\components\rendering">
+      <UniqueIdentifier>{91029364-4cd7-4310-bf14-9ff30d84162e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\c3d\graphics">
+      <UniqueIdentifier>{4c6bb6f8-d2e9-4705-8f61-bf2acfde28cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics">
+      <UniqueIdentifier>{b0f7d7d6-86ed-4582-9fdc-bd6dcdb78cfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader files">
+      <UniqueIdentifier>{5896e321-b836-4847-ba39-7525c6c3231a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader files\c3d">
+      <UniqueIdentifier>{a5082140-cd62-48ef-8fde-2b96259e09e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\components\other">
+      <UniqueIdentifier>{51a22201-6144-4fe6-82d5-dc654a992e18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\c3d\components\other">
+      <UniqueIdentifier>{5ef9c7bf-76b9-4c5b-9051-64ce2132843f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\c3d\components\physics">
+      <UniqueIdentifier>{4e29b287-d98f-4fa1-8b3d-88c3ff69a952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\components\physics">
+      <UniqueIdentifier>{5c03e0ef-ed23-46a1-90b3-caaf963c3d23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\imgui">
+      <UniqueIdentifier>{f25c8f06-44e2-4a47-baa6-1bfbb64e8f19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\imgui">
+      <UniqueIdentifier>{e90f3f57-8a93-4c13-abd1-7f346a0db9f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader files\imgui">
+      <UniqueIdentifier>{72ac0621-de6d-49e1-ad24-3f4f4b8e25b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\c3d\components\audio">
+      <UniqueIdentifier>{e16182e6-e7b5-4725-8a08-e335b72540bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\components\audio">
+      <UniqueIdentifier>{78fabd84-973d-43f7-af37-1ac5413951b5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gamescene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\transformdata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\rendering\camera.cpp">
+      <Filter>Source Files\components\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\rendering\light.cpp">
+      <Filter>Source Files\components\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\rendering\mesh.cpp">
+      <Filter>Source Files\components\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\defaultrenderer.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\componentfactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\implementations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\other\lookat.cpp">
+      <Filter>Source Files\components\other</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\physics\rigidbody.cpp">
+      <Filter>Source Files\components\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\physics\boxcollider.cpp">
+      <Filter>Source Files\components\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\physics\capsulecollider.cpp">
+      <Filter>Source Files\components\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\physics\spherecollider.cpp">
+      <Filter>Source Files\components\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\rendering\environment.cpp">
+      <Filter>Source Files\components\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_draw.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_impl_gallium.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_stdlib.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_tables.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\audio\audiosourcecomponent.cpp">
+      <Filter>Source Files\components\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\audio\audiolistenercomponent.cpp">
+      <Filter>Source Files\components\audio</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\c3d\game.h">
+      <Filter>Header Files\c3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\gamescene.h">
+      <Filter>Header Files\c3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\physics\collision.h">
+      <Filter>Header Files\c3d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\gameobject.h">
+      <Filter>Header Files\c3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\transformdata.h">
+      <Filter>Header Files\c3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\component.h">
+      <Filter>Header Files\c3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\components\rendering\camera.h">
+      <Filter>Header Files\c3d\components\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\components\rendering\light.h">
+      <Filter>Header Files\c3d\components\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\components\rendering\mesh.h">
+      <Filter>Header Files\c3d\components\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\graphics\defaultrenderer.h">
+      <Filter>Header Files\c3d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\componentfactory.h">
+      <Filter>Header Files\c3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\components\other\lookat.h">
+      <Filter>Header Files\c3d\components\other</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\components\physics\rigidbody.h">
+      <Filter>Header Files\c3d\components\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\components\physics\boxcollider.h">
+      <Filter>Header Files\c3d\components\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\components\physics\capsulecollider.h">
+      <Filter>Header Files\c3d\components\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\components\physics\spherecollider.h">
+      <Filter>Header Files\c3d\components\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\components\rendering\environment.h">
+      <Filter>Header Files\c3d\components\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imconfig.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui_impl_gallium.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui_internal.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui_stdlib.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imstb_rectpack.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imstb_textedit.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imstb_truetype.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\mdi_glyphs.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\mdi_ttf.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\components\audio\audiosourcecomponent.h">
+      <Filter>Header Files\c3d\components\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\components\audio\audiolistenercomponent.h">
+      <Filter>Header Files\c3d\components\audio</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <SlangCompileTask Include="shaders\c3d\gbuffer.slang">
+      <Filter>Shader files\c3d</Filter>
+    </SlangCompileTask>
+    <SlangCompileTask Include="shaders\c3d\light_accumulation.slang">
+      <Filter>Shader files\c3d</Filter>
+    </SlangCompileTask>
+    <SlangCompileTask Include="shaders\c3d\shadow.slang">
+      <Filter>Shader files\c3d</Filter>
+    </SlangCompileTask>
+    <SlangCompileTask Include="shaders\imgui\imgui.slang">
+      <Filter>Shader files\imgui</Filter>
+    </SlangCompileTask>
+  </ItemGroup>
+</Project>

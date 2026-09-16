@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{bf9724d6-3178-41ed-ab5c-dc5be3887b71}</ProjectGuid>
+    <RootNamespace>Calcium3D</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\MSBuildCustomizations\SlangCompile.props" />
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)lib\</OutDir>
+    <IntDir>$(SolutionDir)build\$(ProjectName)\$(PlatformTarget)_$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(PlatformTarget)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)lib\</OutDir>
+    <IntDir>$(SolutionDir)build\$(ProjectName)\$(PlatformTarget)_$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(PlatformTarget)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Manifest>
+      <EnableSegmentHeap>true</EnableSegmentHeap>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Manifest>
+      <EnableSegmentHeap>true</EnableSegmentHeap>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)gallium-core\include;$(SolutionDir)external\include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib;$(SolutionDir)external\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Gallium_$(PlatformTarget)_$(Configuration).lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableSegmentHeap>true</EnableSegmentHeap>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)gallium-core\include;$(SolutionDir)external\include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib;$(SolutionDir)external\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Gallium_$(PlatformTarget)_$(Configuration).lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableSegmentHeap>true</EnableSegmentHeap>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <SlangCompileTask Include="shaders\c3d\shadow.slang">
+      <FileType>Document</FileType>
+      <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">vs_main</Entrypoints>
+      <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Release|x64'">vs_main</Entrypoints>
+    </SlangCompileTask>
+    <ClCompile Include="src\component.cpp" />
+    <ClCompile Include="src\componentfactory.cpp" />
+    <ClCompile Include="src\components\audio\audiolistenercomponent.cpp" />
+    <ClCompile Include="src\components\audio\audiosourcecomponent.cpp" />
+    <ClCompile Include="src\components\other\lookat.cpp" />
+    <ClCompile Include="src\components\physics\boxcollider.cpp" />
+    <ClCompile Include="src\components\physics\capsulecollider.cpp" />
+    <ClCompile Include="src\components\physics\rigidbody.cpp" />
+    <ClCompile Include="src\components\physics\spherecollider.cpp" />
+    <ClCompile Include="src\components\rendering\camera.cpp" />
+    <ClCompile Include="src\components\rendering\environment.cpp" />
+    <ClCompile Include="src\components\rendering\light.cpp" />
+    <ClCompile Include="src\components\rendering\mesh.cpp" />
+    <ClCompile Include="src\game.cpp" />
+    <ClCompile Include="src\gamescene.cpp" />
+    <ClCompile Include="src\gameobject.cpp" />
+    <ClCompile Include="src\graphics\defaultrenderer.cpp" />
+    <ClCompile Include="src\imgui\imgui.cpp" />
+    <ClCompile Include="src\imgui\imgui_draw.cpp" />
+    <ClCompile Include="src\imgui\imgui_impl_gallium.cpp" />
+    <ClCompile Include="src\imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="src\imgui\imgui_tables.cpp" />
+    <ClCompile Include="src\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\implementations.cpp" />
+    <ClCompile Include="src\transformdata.cpp" />
+    <SlangCompileTask Include="shaders\imgui\imgui.slang">
+      <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">vs_main;fs_main</Entrypoints>
+      <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Release|x64'">vs_main;fs_main</Entrypoints>
+    </SlangCompileTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\c3d\component.h" />
+    <ClInclude Include="include\c3d\componentfactory.h" />
+    <ClInclude Include="include\c3d\components\audio\audiolistenercomponent.h" />
+    <ClInclude Include="include\c3d\components\audio\audiosourcecomponent.h" />
+    <ClInclude Include="include\c3d\components\other\lookat.h" />
+    <ClInclude Include="include\c3d\components\physics\boxcollider.h" />
+    <ClInclude Include="include\c3d\components\physics\capsulecollider.h" />
+    <ClInclude Include="include\c3d\components\physics\rigidbody.h" />
+    <ClInclude Include="include\c3d\components\physics\spherecollider.h" />
+    <ClInclude Include="include\c3d\components\rendering\camera.h" />
+    <ClInclude Include="include\c3d\components\rendering\environment.h" />
+    <ClInclude Include="include\c3d\components\rendering\light.h" />
+    <ClInclude Include="include\c3d\components\rendering\mesh.h" />
+    <ClInclude Include="include\c3d\game.h" />
+    <ClInclude Include="include\c3d\gameobject.h" />
+    <ClInclude Include="include\c3d\gamescene.h" />
+    <ClInclude Include="include\c3d\graphics\defaultrenderer.h" />
+    <ClInclude Include="include\c3d\physics\collision.h" />
+    <ClInclude Include="include\c3d\transformdata.h" />
+    <ClInclude Include="include\imgui\imconfig.h" />
+    <ClInclude Include="include\imgui\imgui.h" />
+    <ClInclude Include="include\imgui\imgui_impl_gallium.h" />
+    <ClInclude Include="include\imgui\imgui_internal.h" />
+    <ClInclude Include="include\imgui\imgui_stdlib.h" />
+    <ClInclude Include="include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="include\imgui\imstb_textedit.h" />
+    <ClInclude Include="include\imgui\imstb_truetype.h" />
+    <ClInclude Include="include\imgui\mdi_glyphs.h" />
+    <ClInclude Include="include\imgui\mdi_ttf.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <SlangCompileTask Include="shaders\c3d\gbuffer.slang">
+      <FileType>Document</FileType>
+      <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">vs_main;fs_main</Entrypoints>
+      <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Release|x64'">vs_main;fs_main</Entrypoints>
+    </SlangCompileTask>
+    <SlangCompileTask Include="shaders\c3d\light_accumulation.slang">
+      <FileType>Document</FileType>
+      <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cs_main</Entrypoints>
+      <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cs_main</Entrypoints>
+    </SlangCompileTask>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\MSBuildCustomizations\SlangCompile.targets" />
+  </ImportGroup>
+</Project>

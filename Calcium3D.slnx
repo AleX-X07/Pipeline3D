@@ -1,0 +1,13 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="Calcium3D/Calcium3D.vcxproj" Id="bf9724d6-3178-41ed-ab5c-dc5be3887b71">
+    <BuildDependency Project="gallium-core/Gallium.vcxproj" />
+  </Project>
+  <Project Path="Calcium3DExampleApp/Calcium3DExampleApp.vcxproj" Id="4fadc2e0-bbcd-4891-aac2-0b0f61aaa795">
+    <BuildDependency Project="Calcium3D/Calcium3D.vcxproj" />
+    <BuildDependency Project="gallium-core/Gallium.vcxproj" />
+  </Project>
+  <Project Path="gallium-core/Gallium.vcxproj" Id="6b35c7de-2c9d-4328-9f94-b20d3c35328f" />
+</Solution>
