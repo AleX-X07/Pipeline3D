@@ -4,7 +4,7 @@
 
 ### Cloning
 
-This repository makes uses of submodules, so make sure to use `git clone --recurse-submodules` to clone.
+This repository makes use of submodules, so make sure to use `git clone --recurse-submodules` to clone.
 
 ### Building
 
