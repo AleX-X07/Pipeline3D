@@ -18,6 +18,7 @@ public struct Material
 	MaterialValue baseColor;
     MaterialValue orm;
     MaterialValue normal;
+    MaterialValue emissive;
 };
 
 struct FrameUniforms
@@ -88,6 +89,7 @@ struct FSOut
 {
     float4 rt0;
     float4 rt1;
+    float4 rt2;
 };
 
 float3 GetBaseColor(uint materialId, float2 uv)
@@ -104,6 +106,22 @@ float3 GetBaseColor(uint materialId, float2 uv)
     }
 
     return pow(result, 2.2f.xxx);
+}
+
+float3 GetEmissive(uint materialId, float2 uv)
+{
+    float3 result = 0.0f.xxx;
+
+    if (materialId != uint(-1))
+    {
+        result = pc.frameUniforms.materials[materialId].emissive.value.rgb;
+
+        uint texId = pc.frameUniforms.materials[materialId].emissive.textureId.r;
+        if (texId != uint(-1))
+            result = textures[texId].Sample(uv).rgb;
+    }
+
+    return result;
 }
 
 float3 GetORM(uint materialId, float2 uv)
@@ -147,12 +165,14 @@ FSOut fs_main(VSOut input)
 
     float3 baseColor = GetBaseColor(pc.materialId, input.uv);
     float3 orm       = GetORM(pc.materialId, input.uv);
+    float3 emissive  = GetEmissive(pc.materialId, input.uv);
     float  metalness = orm.z;
     float  roughness = orm.y;
     float3 normal    = GetNormal(pc.materialId, input.normal, input.tangent, input.uv);
 
     output.rt0 = float4(baseColor, metalness);
     output.rt1 = float4(normal, roughness);
+    output.rt2 = float4(emissive, 0.0f);
 
     return output;
 }

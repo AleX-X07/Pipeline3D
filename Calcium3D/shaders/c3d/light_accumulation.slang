@@ -47,6 +47,7 @@ struct PushConstants
     uint           numLights;
     uint           rt0;
     uint           rt1;
+    uint           rt2;
     uint           zbuffer;
     uint           output;
 };
@@ -58,6 +59,7 @@ public struct ShadeMaterial
     public float3 albedo;
     public float  metalness;
     public float  roughness;
+    public float3 emissive;
 };
 
 public float3 AdjustPointLightForRadius(float3 R, float3 L_unnorm, float radius)
@@ -234,6 +236,7 @@ void cs_main(uint3 threadId: SV_DispatchThreadID)
 
     float4 rt0 = textures[pc.rt0].Load(int3(threadId.xy, 0));
     float4 rt1 = textures[pc.rt1].Load(int3(threadId.xy, 0));
+    float4 rt2 = textures[pc.rt2].Load(int3(threadId.xy, 0));
     float  rtZ = textures[pc.zbuffer].Load(int3(threadId.xy, 0)).r;
 
     float2 ndc2d = float2(
@@ -254,7 +257,7 @@ void cs_main(uint3 threadId: SV_DispatchThreadID)
         return;
     }
 
-    ShadeMaterial material = ShadeMaterial(rt0.rgb, rt0.a, rt1.a);
+    ShadeMaterial material = ShadeMaterial(rt0.rgb, rt0.a, rt1.a, rt2.rgb);
 
     float3 N = normalize(rt1.xyz);
     float3 R = reflect(-V, N);
@@ -273,7 +276,7 @@ void cs_main(uint3 threadId: SV_DispatchThreadID)
         iblSpecular = F * SampleIBL(pc.frameUniforms.environmentSpecularId, R);
     }
 
-    float3 result = iblDiffuse + iblSpecular;
+    float3 result = iblDiffuse + iblSpecular + material.emissive;
     for (uint i = 0; i < pc.numLights; ++i)
         result += Shade(threadId.xy, material, ws.xyz, N, V, i);
 

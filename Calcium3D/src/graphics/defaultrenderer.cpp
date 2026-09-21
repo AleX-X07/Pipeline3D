@@ -50,6 +50,7 @@ struct Material
 	MaterialValue baseColor;
 	MaterialValue orm;
 	MaterialValue normal;
+	MaterialValue emissive;
 };
 #pragma pack(pop)
 
@@ -136,7 +137,8 @@ static std::unique_ptr<ga::gpu::GraphicsPipeline> s_GBufferPipeline(ga::gpu::Dev
 		.attachmentFormats = {
 			.colorFormats = {
 				/* rt0 */ ga::gpu::EFormat::R8G8B8A8_UNorm,
-				/* rt1 */ ga::gpu::EFormat::R16G16B16A16_SFloat
+				/* rt1 */ ga::gpu::EFormat::R16G16B16A16_SFloat,
+				/* rt2 */ ga::gpu::EFormat::R16G16B16A16_SFloat
 			},
 			.depthFormat = ga::gpu::EFormat::D32_SFloat
 		}
@@ -227,6 +229,10 @@ void DefaultRenderer::Internal::RenderGeometries(const ga::gpu::RenderEncoder& e
 					.normal = MaterialValue {
 						.value = glm::vec4(0.0f, 0.0f, 1.0f, 0.0f),
 						.textureId = glm::uvec4(material.normal.textureId, 0, 0, 0)
+					},
+					.emissive = MaterialValue {
+						.value = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),
+						.textureId = glm::uvec4(material.emissive.textureId, 0, 0, 0)
 					}
 				});
 			}
@@ -262,12 +268,10 @@ static glm::mat4 s_ComputeSpotLightViewProj(const Light& light)
 		? glm::vec3(0.0f, 0.0f, 1.0f)
 		: glm::vec3(0.0f, 1.0f, 0.0f);
 
+	float far = glm::max(100.0f, kNear + 1e-2f);
+
 	glm::mat4 view = glm::lookAt(light.position, light.position - light.direction, up);
-
-	float            far = glm::max(100.0f, kNear + 1e-2f);
-
 	glm::mat4 proj = glm::perspective(fov, 1.0f, kNear, far);
-
 	return proj * view;
 }
 
@@ -332,6 +336,8 @@ DefaultRenderer::DefaultRenderer(ga::gpu::Device& gpu)
 			.LoadOp(ga::gpu::ELoadOp::Clear, { 0.0f, 0.0f, 0.0f, 0.0f })
 		.WritesTo("rt1"_h, ga::gpu::EImageUsage::ColorAttachment, ga::render::RGImageInfo { .format = ga::gpu::EFormat::R16G16B16A16_SFloat })
 			.LoadOp(ga::gpu::ELoadOp::Clear, { 0.0f, 0.0f, 0.0f, 0.0f })
+		.WritesTo("rt2"_h, ga::gpu::EImageUsage::ColorAttachment, ga::render::RGImageInfo { .format = ga::gpu::EFormat::R16G16B16A16_SFloat })
+			.LoadOp(ga::gpu::ELoadOp::Clear, { 0.0f, 0.0f, 0.0f, 0.0f })
 		.WritesTo("zbuffer"_h, ga::gpu::EImageUsage::DepthStencil, ga::render::RGImageInfo { .format = ga::gpu::EFormat::D32_SFloat })
 			.LoadOp(ga::gpu::ELoadOp::Clear, 1.0f)
 		.Render([&](const ga::gpu::RenderEncoder& encoder) { m_pImpl->RenderGeometries(encoder); });
@@ -357,6 +363,7 @@ DefaultRenderer::DefaultRenderer(ga::gpu::Device& gpu)
 	m_pImpl->renderGraph.AddPass("Light accumulation", s_ComputePipeline(gpu, "/shaders/c3d/light_accumulation.slang.spv"))
 		.ReadsFrom("rt0"_h, ga::gpu::EImageUsage::Sampled)
 		.ReadsFrom("rt1"_h, ga::gpu::EImageUsage::Sampled)
+		.ReadsFrom("rt2"_h, ga::gpu::EImageUsage::Sampled)
 		.ReadsFrom("zbuffer"_h, ga::gpu::EImageUsage::Sampled)
 		.WritesTo("output"_h, ga::gpu::EImageUsage::ColorAttachment, ga::render::RGImageInfo { .external = true })
 		.Compute([&](const ga::gpu::ComputeEncoder& encoder) {
@@ -371,6 +378,7 @@ DefaultRenderer::DefaultRenderer(ga::gpu::Device& gpu)
 				uint32_t  numLights;
 				uint32_t  rt0;
 				uint32_t  rt1;
+				uint32_t  rt2;
 				uint32_t  zbuffer;
 				uint32_t  output;
 			};
@@ -382,6 +390,7 @@ DefaultRenderer::DefaultRenderer(ga::gpu::Device& gpu)
 				.numLights	   = uint32_t(m_pImpl->lights.size()),
 				.rt0		   = m_pImpl->renderGraph.IndexOf("rt0"_h),
 				.rt1		   = m_pImpl->renderGraph.IndexOf("rt1"_h),
+				.rt2		   = m_pImpl->renderGraph.IndexOf("rt2"_h),
 				.zbuffer	   = m_pImpl->renderGraph.IndexOf("zbuffer"_h),
 				.output		   = m_pImpl->renderGraph.IndexOf("output"_h),
 			};
