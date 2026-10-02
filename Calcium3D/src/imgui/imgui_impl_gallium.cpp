@@ -479,7 +479,7 @@ std::vector<ga::gpu::SemaphoreId> ImGui_ImplGallium_RenderDrawData(ImDrawData* d
     if (!frameData.vertexBuffer || frameData.vertexBufferSize < neededVtx)
     {
         frameData.vertexBufferSize = neededVtx + 5000; // headroom
-        bd->device->Defer([vb = std::move(frameData.vertexBuffer)] mutable {});
+        bd->device->Defer([vb = std::move(frameData.vertexBuffer)] {});
 
         frameData.vertexBuffer = std::make_unique<ga::gpu::Buffer>(
             *bd->device,
@@ -495,7 +495,7 @@ std::vector<ga::gpu::SemaphoreId> ImGui_ImplGallium_RenderDrawData(ImDrawData* d
     if (!frameData.indexBuffer || frameData.indexBufferSize < neededIdx)
     {
         frameData.indexBufferSize = neededIdx + 10000;
-        bd->device->Defer([ib = std::move(frameData.indexBuffer)] mutable {});
+        bd->device->Defer([ib = std::move(frameData.indexBuffer)] {});
 
         frameData.indexBuffer = std::make_unique<ga::gpu::Buffer>(
             *bd->device,
