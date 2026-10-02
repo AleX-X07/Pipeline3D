@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 - 2025 Sean Apeler
+ * Copyright (C) 2022 - 2026 Sean Apeler
  * This file is part of fastgltf <https://github.com/spnda/fastgltf>.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -27,7 +27,7 @@
 #ifndef FASTGLTF_TOOLS_HPP
 #define FASTGLTF_TOOLS_HPP
 
-#if !defined(FASTGLTF_USE_STD_MODULE) || !FASTGLTF_USE_STD_MODULE
+#if !defined(FASTGLTF_MODULE)
 #include <cstring>
 #include <iterator>
 #endif
@@ -35,7 +35,9 @@
 #include <fastgltf/types.hpp>
 
 #if FASTGLTF_CPP_23 && __has_include(<stdfloat>)
+#if !defined(FASTGLTF_MODULE)
 #include <stdfloat>
+#endif
 
 #if defined(__STDCPP_FLOAT32_T__) && __STDCPP_FLOAT32_T__
 #define FASTGLTF_HAS_FLOAT32 1
@@ -173,7 +175,6 @@ template<> struct ElementTraits<math::fmat2x2> : ElementTraitsBase<math::fmat2x2
 template<> struct ElementTraits<math::fmat3x3> : ElementTraitsBase<math::fmat3x3, AccessorType::Mat3, float> {};
 template<> struct ElementTraits<math::fmat4x4> : ElementTraitsBase<math::fmat4x4, AccessorType::Mat4, float> {};
 
-#if FASTGLTF_HAS_CONCEPTS
 template <typename ElementType>
 concept Element = std::is_arithmetic_v<typename ElementTraits<ElementType>::component_type>
 		&& ElementTraits<ElementType>::type != AccessorType::Invalid
@@ -181,7 +182,6 @@ concept Element = std::is_arithmetic_v<typename ElementTraits<ElementType>::comp
 		&& std::is_default_constructible_v<ElementType>
 		&& std::is_constructible_v<ElementType>
 		&& std::is_move_assignable_v<ElementType>;
-#endif
 
 namespace internal {
 
@@ -194,74 +194,56 @@ namespace internal {
  */
 template <typename T>
 constexpr T deserializeComponent(const std::byte* bytes, std::size_t index) {
-    static_assert(std::is_integral_v<T> && !std::is_same_v<T, bool>, "Component deserialization is only supported on basic arithmetic types.");
-    T ret = 0;
-    // Turns out that on some systems a byte is not 8-bit so this sizeof is not technically correct.
-    for (std::size_t i = 0; i < sizeof(T); ++i) {
-        ret |= (static_cast<T>(bytes[i + index * sizeof(T)]) << i * 8);
-    }
-    return ret;
+	static_assert(std::is_integral_v<T> && !std::is_same_v<T, bool>, "Component deserialization is only supported on basic arithmetic types.");
+	T ret = 0;
+	// Turns out that on some systems a byte is not 8-bit so this sizeof is not technically correct.
+	for (std::size_t i = 0; i < sizeof(T); ++i) {
+		ret |= (static_cast<T>(bytes[i + index * sizeof(T)]) << i * 8);
+	}
+	return ret;
 }
 
 #if FASTGLTF_HAS_FLOAT32
 template<>
-#if FASTGLTF_CONSTEXPR_BITCAST
-constexpr
-#endif
-inline std::float32_t deserializeComponent<std::float32_t>(const std::byte* bytes, std::size_t index) {
-	return bit_cast<std::float32_t>(deserializeComponent<std::uint32_t>(bytes, index));
+constexpr std::float32_t deserializeComponent<std::float32_t>(const std::byte* bytes, std::size_t index) {
+	return std::bit_cast<std::float32_t>(deserializeComponent<std::uint32_t>(bytes, index));
 }
 
 template<>
-#if FASTGLTF_CONSTEXPR_BITCAST
-constexpr
-#endif
-inline float deserializeComponent<float>(const std::byte* bytes, std::size_t index) {
+constexpr float deserializeComponent<float>(const std::byte* bytes, std::size_t index) {
 	return static_cast<float>(deserializeComponent<std::float32_t>(bytes, index));
 }
 #else
 template<>
-#if FASTGLTF_CONSTEXPR_BITCAST
-constexpr
-#endif
-inline float deserializeComponent<float>(const std::byte* bytes, std::size_t index) {
-    static_assert(std::numeric_limits<float>::is_iec559 &&
-                  std::numeric_limits<float>::radix == 2 &&
-                  std::numeric_limits<float>::digits == 24 &&
-                  std::numeric_limits<float>::max_exponent == 128,
-                  "Float deserialization is only supported on IEE754 platforms");
-    return bit_cast<float>(deserializeComponent<std::uint32_t>(bytes, index));
+constexpr float deserializeComponent<float>(const std::byte* bytes, std::size_t index) {
+	static_assert(std::numeric_limits<float>::is_iec559 &&
+				  std::numeric_limits<float>::radix == 2 &&
+				  std::numeric_limits<float>::digits == 24 &&
+				  std::numeric_limits<float>::max_exponent == 128,
+				  "Float deserialization is only supported on IEE754 platforms");
+    return std::bit_cast<float>(deserializeComponent<std::uint32_t>(bytes, index));
 }
 #endif
 
 #if FASTGLTF_HAS_FLOAT64
 template<>
-#if FASTGLTF_CONSTEXPR_BITCAST
-constexpr
-#endif
-inline std::float64_t deserializeComponent<std::float64_t>(const std::byte* bytes, std::size_t index) {
-	return bit_cast<std::float64_t>(deserializeComponent<std::uint64_t>(bytes, index));
+constexpr std::float64_t deserializeComponent<std::float64_t>(const std::byte* bytes, std::size_t index) {
+	return std::bit_cast<std::float64_t>(deserializeComponent<std::uint64_t>(bytes, index));
 }
 
 template<>
-#if FASTGLTF_CONSTEXPR_BITCAST
-constexpr
-#endif
-inline double deserializeComponent<double>(const std::byte* bytes, std::size_t index) {
+constexpr double deserializeComponent<double>(const std::byte* bytes, std::size_t index) {
 	return static_cast<double>(deserializeComponent<std::float64_t>(bytes, index));
 }
 #else
 template<>
-#if FASTGLTF_CONSTEXPR_BITCAST
-constexpr
-#endif
-inline double deserializeComponent<double>(const std::byte* bytes, std::size_t index) {
-    static_assert(std::numeric_limits<double>::is_iec559 &&
-                  std::numeric_limits<double>::radix == 2 &&
-                  std::numeric_limits<double>::digits == 53 &&
-                  std::numeric_limits<double>::max_exponent == 1024,
-                  "Float deserialization is only supported on IEE754 platforms");
-    return bit_cast<double>(deserializeComponent<std::uint64_t>(bytes, index));
+constexpr double deserializeComponent<double>(const std::byte* bytes, std::size_t index) {
+	static_assert(std::numeric_limits<double>::is_iec559 &&
+				  std::numeric_limits<double>::radix == 2 &&
+				  std::numeric_limits<double>::digits == 53 &&
+				  std::numeric_limits<double>::max_exponent == 1024,
+				  "Float deserialization is only supported on IEE754 platforms");
+    return std::bit_cast<double>(deserializeComponent<std::uint64_t>(bytes, index));
 }
 #endif
 
@@ -283,7 +265,7 @@ constexpr DestType convertComponent(const SourceType& source, bool normalized) {
 			// We have to use max here because for uchar -> float we could have -128 but 1.0 should represent 127,
 			// which is why -128 and -127 both equate to 1.0.
 			return fastgltf::max(static_cast<DestType>(source) / static_cast<DestType>(std::numeric_limits<SourceType>::max()),
-			                     minValue);
+								 minValue);
 		}
 	}
 
@@ -343,9 +325,7 @@ constexpr DestType getAccessorComponentAt(ComponentType componentType, AccessorT
 }
 
 template <typename ElementType, typename SourceType, std::size_t... I>
-#if FASTGLTF_HAS_CONCEPTS
 requires Element<ElementType>
-#endif
 constexpr ElementType convertAccessorElement(const std::byte* bytes, bool normalized, std::index_sequence<I...>) {
 	using Traits = ElementTraits<ElementType>;
 	static_assert(std::is_arithmetic_v<typename Traits::component_type>, "Accessor traits must provide a valid component type");
@@ -361,9 +341,7 @@ constexpr ElementType convertAccessorElement(const std::byte* bytes, bool normal
 
 template <typename ElementType,
 		typename Seq = std::make_index_sequence<getNumComponents(ElementTraits<ElementType>::type)>>
-#if FASTGLTF_HAS_CONCEPTS
 requires Element<ElementType>
-#endif
 ElementType getAccessorElementAt(ComponentType componentType, const std::byte* bytes, bool normalized = false) {
 	switch (componentType) {
 		case ComponentType::Byte:
@@ -443,21 +421,21 @@ FASTGLTF_EXPORT struct DefaultBufferDataAdapter {
 		const auto& bufferView = asset.bufferViews[bufferViewIdx];
 
 		const auto data = std::visit(visitor {
-			[](auto&) -> span<const std::byte> {
+			[](auto&) -> std::span<const std::byte> {
 				assert(false && "Tried accessing a buffer with no data, likely because no buffers were loaded. Perhaps you forgot to specify the LoadExternalBuffers option?");
 				return {};
 			},
-			[](const sources::Fallback&) -> span<const std::byte> {
+			[](const sources::Fallback&) -> std::span<const std::byte> {
 				assert(false && "Tried accessing data of a fallback buffer.");
 				return {};
 			},
-			[&](const sources::Array& array) -> span<const std::byte> {
-				return span(array.bytes.data(), array.bytes.size_bytes());
+			[&](const sources::Array& array) -> std::span<const std::byte> {
+				return {array.bytes.data(), array.bytes.size_bytes()};
 			},
-			[&](const sources::Vector& vec) -> span<const std::byte> {
-				return span(vec.bytes.data(), vec.bytes.size());
+			[&](const sources::Vector& vec) -> std::span<const std::byte> {
+				return {vec.bytes.data(), vec.bytes.size()};
 			},
-			[&](const sources::ByteView& bv) -> span<const std::byte> {
+			[&](const sources::ByteView& bv) -> std::span<const std::byte> {
 				return bv.bytes;
 			},
 		}, asset.buffers[bufferView.bufferIndex].data);
@@ -493,8 +471,9 @@ public:
 			: accessor(accessor), idx(idx) {
 		if (accessor->accessor.sparse.has_value()) {
 			// Get the first sparse index.
-			nextSparseIndex = internal::getAccessorElementAt<std::uint32_t>(accessor->indexComponentType,
-			                                                                &accessor->indicesBytes[accessor->indexStride * sparseIdx]);
+			nextSparseIndex = internal::getAccessorElementAt<std::uint32_t>(
+				accessor->indexComponentType,
+				&accessor->indicesBytes[accessor->indexStride * sparseIdx]);
 		}
 	}
 
@@ -530,15 +509,17 @@ public:
 		if (accessor->accessor.sparse.has_value()) {
 			if (idx == nextSparseIndex) {
 				// Get the sparse value for this index
-				auto value = internal::getAccessorElementAt<ElementType>(accessor->componentType,
-																		 &accessor->valuesBytes[accessor->valueStride * sparseIdx],
-																		 accessor->accessor.normalized);
+				auto value = internal::getAccessorElementAt<ElementType>(
+					accessor->componentType,
+					&accessor->valuesBytes[accessor->valueStride * sparseIdx],
+					accessor->accessor.normalized);
 
 				// Find the next sparse index.
 				++sparseIdx;
 				if (sparseIdx < accessor->sparseCount) {
-					nextSparseIndex = internal::getAccessorElementAt<std::uint32_t>(accessor->indexComponentType,
-					                                                                &accessor->indicesBytes[accessor->indexStride * sparseIdx]);
+					nextSparseIndex = internal::getAccessorElementAt<std::uint32_t>(
+						accessor->indexComponentType,
+						&accessor->indicesBytes[accessor->indexStride * sparseIdx]);
 				}
 				return value;
 			}
@@ -550,9 +531,7 @@ public:
 	}
 };
 
-#if FASTGLTF_HAS_CONCEPTS
 static_assert(std::input_iterator<AccessorIterator<math::fvec4>>, "AccessorIterator needs to satisfy input_iterator");
-#endif
 
 template <typename ElementType, typename BufferDataAdapter = DefaultBufferDataAdapter>
 class IterableAccessor {
@@ -561,14 +540,14 @@ class IterableAccessor {
 	const Asset& asset;
 	const Accessor& accessor;
 
-	span<const std::byte> bufferBytes;
+	std::span<const std::byte> bufferBytes;
 	std::size_t stride;
 	fastgltf::ComponentType componentType;
 
 	// Data needed for sparse accessors
 	fastgltf::ComponentType indexComponentType;
-	span<const std::byte> indicesBytes;
-	span<const std::byte> valuesBytes;
+	std::span<const std::byte> indicesBytes;
+	std::span<const std::byte> valuesBytes;
 	std::size_t indexStride;
 	std::size_t valueStride;
 	std::size_t sparseCount;
@@ -610,14 +589,10 @@ public:
 	}
 };
 
-#if FASTGLTF_HAS_CONCEPTS
 static_assert(std::ranges::input_range<IterableAccessor<math::fvec4>>, "IterableAccessor needs to satisfy input_range");
-#endif
 
 FASTGLTF_EXPORT template <typename ElementType, typename BufferDataAdapter = DefaultBufferDataAdapter>
-#if FASTGLTF_HAS_CONCEPTS
 requires Element<ElementType>
-#endif
 ElementType getAccessorElement(const Asset& asset, const Accessor& accessor, size_t index,
 		const BufferDataAdapter& adapter = {}) {
 	using Traits = ElementTraits<ElementType>;
@@ -657,26 +632,22 @@ ElementType getAccessorElement(const Asset& asset, const Accessor& accessor, siz
 	}
 
 	const auto& view = asset.bufferViews[*accessor.bufferViewIndex];
-    auto stride = view.byteStride.value_or(getElementByteSize(accessor.type, accessor.componentType));
+	auto stride = view.byteStride.value_or(getElementByteSize(accessor.type, accessor.componentType));
 
 	auto bytes = adapter(asset, *accessor.bufferViewIndex).subspan(accessor.byteOffset);
 
 	return internal::getAccessorElementAt<ElementType>(
-            accessor.componentType, &bytes[index * stride], accessor.normalized);
+			accessor.componentType, &bytes[index * stride], accessor.normalized);
 }
 
 FASTGLTF_EXPORT template<typename ElementType, typename BufferDataAdapter = DefaultBufferDataAdapter>
-#if FASTGLTF_HAS_CONCEPTS
 requires Element<ElementType>
-#endif
 IterableAccessor<ElementType, BufferDataAdapter> iterateAccessor(const Asset& asset, const Accessor& accessor, const BufferDataAdapter& adapter = {}) {
 	return IterableAccessor<ElementType, BufferDataAdapter>(asset, accessor, adapter);
 }
 
 FASTGLTF_EXPORT template <typename ElementType, typename Functor, typename BufferDataAdapter = DefaultBufferDataAdapter>
-#if FASTGLTF_HAS_CONCEPTS
 requires Element<ElementType> && std::is_invocable_v<Functor, ElementType>
-#endif
 void iterateAccessor(const Asset& asset, const Accessor& accessor, Functor&& func,
 		const BufferDataAdapter& adapter = {}) {
 	using Traits = ElementTraits<ElementType>;
@@ -697,7 +668,7 @@ void iterateAccessor(const Asset& asset, const Accessor& accessor, Functor&& fun
 		// have its target or byteStride properties defined."
 		auto valueStride = getElementByteSize(accessor.type, accessor.componentType);
 
-		span<const std::byte> srcBytes;
+		std::span<const std::byte> srcBytes;
 		std::size_t srcStride = 0;
 
 		// 5.1.1. accessor.bufferView
@@ -706,8 +677,8 @@ void iterateAccessor(const Asset& asset, const Accessor& accessor, Functor&& fun
 		if (accessor.bufferViewIndex) {
 			auto& view = asset.bufferViews[*accessor.bufferViewIndex];
 			srcBytes = adapter(asset, *accessor.bufferViewIndex).subspan(accessor.byteOffset);
-            srcStride = view.byteStride.value_or(getElementByteSize(accessor.type, accessor.componentType));
-        }
+			srcStride = view.byteStride.value_or(getElementByteSize(accessor.type, accessor.componentType));
+		}
 
 		auto nextSparseIndex = internal::getAccessorElementAt<std::uint32_t>(
 				accessor.sparse->indexComponentType, indicesBytes.data());
@@ -750,7 +721,7 @@ void iterateAccessor(const Asset& asset, const Accessor& accessor, Functor&& fun
 		}
 	} else {
 		auto& view = asset.bufferViews[*accessor.bufferViewIndex];
-        auto stride = view.byteStride.value_or(getElementByteSize(accessor.type, accessor.componentType));
+		auto stride = view.byteStride.value_or(getElementByteSize(accessor.type, accessor.componentType));
 
 		auto bytes = adapter(asset, *accessor.bufferViewIndex).subspan(accessor.byteOffset);
 
@@ -763,11 +734,9 @@ void iterateAccessor(const Asset& asset, const Accessor& accessor, Functor&& fun
 }
 
 FASTGLTF_EXPORT template <typename ElementType, typename Functor, typename BufferDataAdapter = DefaultBufferDataAdapter>
-#if FASTGLTF_HAS_CONCEPTS
 requires Element<ElementType> && std::is_invocable_v<Functor, ElementType, std::size_t>
-#endif
 void iterateAccessorWithIndex(const Asset& asset, const Accessor& accessor, Functor&& func,
-                     const BufferDataAdapter& adapter = {}) {
+					 const BufferDataAdapter& adapter = {}) {
 	std::size_t idx = 0;
 	iterateAccessor<ElementType>(asset, accessor, [&](auto&& elementType) {
 		std::invoke(func, std::forward<ElementType>(elementType), idx++);
@@ -775,10 +744,8 @@ void iterateAccessorWithIndex(const Asset& asset, const Accessor& accessor, Func
 }
 
 FASTGLTF_EXPORT template <typename ElementType, std::size_t TargetStride = sizeof(ElementType),
-    typename BufferDataAdapter = DefaultBufferDataAdapter>
-#if FASTGLTF_HAS_CONCEPTS
+	typename BufferDataAdapter = DefaultBufferDataAdapter>
 requires Element<ElementType>
-#endif
 void copyFromAccessor(const Asset& asset, const Accessor& accessor, void* dest,
 		const BufferDataAdapter& adapter = {}) {
 	using Traits = ElementTraits<ElementType>;
@@ -833,7 +800,7 @@ void copyFromAccessor(const Asset& asset, const Accessor& accessor, void* dest,
 
 	auto srcBytes = adapter(asset, *accessor.bufferViewIndex).subspan(accessor.byteOffset);
 
-    // If the data is normalized or the component/accessor type is different, we have to convert each element and can't memcpy.
+	// If the data is normalized or the component/accessor type is different, we have to convert each element and can't memcpy.
 	if (std::is_trivially_copyable_v<ElementType> && !accessor.normalized && accessor.componentType == Traits::enum_component_type && !isMatrix(accessor.type)) {
 		if (srcStride == elemSize && srcStride == TargetStride) {
 			std::memcpy(dest, srcBytes.data(), elemSize * accessor.count);
@@ -846,7 +813,7 @@ void copyFromAccessor(const Asset& asset, const Accessor& accessor, void* dest,
 		for (std::size_t i = 0; i < accessor.count; ++i) {
 			auto* pDest = reinterpret_cast<ElementType*>(dstBytes + TargetStride * i);
 			*pDest = internal::getAccessorElementAt<ElementType>(
-                    accessor.componentType, &srcBytes[srcStride * i]);
+					accessor.componentType, &srcBytes[srcStride * i], accessor.normalized);
 		}
 	}
 }
@@ -893,17 +860,24 @@ void copyComponentsFromAccessor(const Asset& asset, const Accessor& accessor, vo
 }
 
 /**
+ * Returns the local transform matrix for a given node, computing it from TRS components if necessary
+ */
+FASTGLTF_EXPORT inline auto getLocalTransformMatrix(const Node& node) {
+	return visit_exhaustive(visitor {
+		[&](const math::fmat4x4& matrix) {
+			return matrix;
+		},
+		[&](const TRS& trs) {
+			return scale(rotate(translate(math::fmat4x4(), trs.translation), trs.rotation), trs.scale);
+		}
+	}, node.transform);
+}
+
+/**
  * Computes the transform matrix for a given node, and multiplies the given base with that matrix.
  */
 FASTGLTF_EXPORT inline auto getTransformMatrix(const Node& node, const math::fmat4x4& base = math::fmat4x4()) {
-	return visit_exhaustive(visitor {
-		[&](const math::fmat4x4& matrix) {
-			return base * matrix;
-		},
-		[&](const TRS& trs) {
-			return scale(rotate(translate(base, trs.translation), trs.rotation), trs.scale);
-		}
-	}, node.transform);
+	return base * getLocalTransformMatrix(node);
 }
 
 /**
@@ -911,10 +885,8 @@ FASTGLTF_EXPORT inline auto getTransformMatrix(const Node& node, const math::fma
  * and calling the callback function with that node and the transform.
  */
 FASTGLTF_EXPORT template <typename AssetType, typename Callback>
-#if FASTGLTF_HAS_CONCEPTS
 requires std::same_as<std::remove_cvref_t<AssetType>, Asset>
-      && std::is_invocable_v<Callback, fastgltf::Node&, const fastgltf::math::fmat4x4&>
-#endif
+	  && std::is_invocable_v<Callback, fastgltf::Node&, const fastgltf::math::fmat4x4&>
 void iterateSceneNodes(AssetType&& asset, std::size_t sceneIndex, math::fmat4x4 initial, Callback callback) {
 	auto& scene = asset.scenes[sceneIndex];
 
