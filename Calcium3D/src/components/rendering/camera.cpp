@@ -18,7 +18,7 @@ struct Camera::Internal
 	glm::mat4 projectionMatrix;
 
 	ga::core::MessageHandler* resizeHandler         = nullptr;
-	glm::uvec2                lastKnownWindowSize   = glm::uvec2(1280, 720);
+	glm::uvec2                lastKnownWindowSize   = glm::uvec2(1600, 900);
 	bool                      autoAdjustAspectRatio = true;
 };
 
@@ -55,6 +55,26 @@ const glm::mat4& Camera::ProjectionMatrix()
 	return m_camImpl->projectionMatrix;
 }
 
+std::pair<glm::vec3, glm::vec3> Camera::Deproject(const glm::vec2& screenCoords)
+{
+	const glm::vec2 size = glm::vec2(m_camImpl->lastKnownWindowSize);
+	const float     ndcX = (screenCoords.x / size.x) * 2.0f - 1.0f;
+	const float     ndcY = -(screenCoords.y / size.y) * 2.0f + 1.0f;
+
+	const glm::mat4 view  = glm::inverse(GetGameObject()->Transform().GlobalMatrix());
+	const glm::mat4 invVP = glm::inverse(ProjectionMatrix() * view);
+
+	glm::vec4 nearPt = invVP * glm::vec4(ndcX, ndcY, -1.0f, 1.0f);
+	glm::vec4 farPt = invVP * glm::vec4(ndcX, ndcY, 1.0f, 1.0f);
+
+	nearPt /= nearPt.w;
+	farPt /= farPt.w;
+
+	const glm::vec3 ro = glm::vec3(nearPt);
+	const glm::vec3 rd = glm::normalize(glm::vec3(farPt) - glm::vec3(nearPt));
+
+	return { ro, rd };
+}
 
 void Camera::Serialize(ga::core::CttiSerializer& serializer) const
 {

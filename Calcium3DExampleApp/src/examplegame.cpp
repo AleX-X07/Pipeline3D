@@ -15,6 +15,8 @@
 #include <c3d/components/other/lookat.h>
 #include <c3d/graphics/defaultrenderer.h>
 
+#include <print>
+
 ExampleGame::ExampleGame()
 {
 }
@@ -109,6 +111,12 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 	camera->Transform->Position = camera->Transform->Position() + offset;
 
 	m_gameScene.Update(subsystems);
+
+	if (subsystems.platform.Input().IsHeld(ga::platform::EMouseButton::Left))
+	{
+		auto [ro, rd] = camera->GetComponent<c3d::components::rendering::Camera>()->Deproject(subsystems.platform.Input().MousePosition());
+		std::println("ro: ({}, {}, {}) / rd: ({}, {}, {})", ro.x, ro.y, ro.z, rd.x, rd.y, rd.z);
+	}
 }
 
 std::vector<ga::gpu::SemaphoreId> ExampleGame::Render(c3d::GameSubsystems& subsystems, ga::gpu::Image& frameImage, const ga::gpu::CommandEncoder& encoder)

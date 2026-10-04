@@ -28,6 +28,7 @@ namespace c3d::components::rendering
 
 		void             UpdateMatrix();
 		const glm::mat4& ProjectionMatrix();
+		std::pair<glm::vec3 /* ro */, glm::vec3 /* rd */> Deproject(const glm::vec2& screenCoords); // assumes screenCoords is in PIXELS
 
 		void Serialize(ga::core::CttiSerializer& serializer) const override;
 		void Deserialize(ga::core::CttiDeserializer& deserializer) override;
