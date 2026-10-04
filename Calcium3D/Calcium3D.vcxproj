@@ -182,6 +182,7 @@
     <ClCompile Include="src\gamescene.cpp" />
     <ClCompile Include="src\gameobject.cpp" />
     <ClCompile Include="src\graphics\defaultrenderer.cpp" />
+    <ClCompile Include="src\graphics\splitscreenrenderer.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp" />
     <ClCompile Include="src\imgui\imgui_draw.cpp" />
     <ClCompile Include="src\imgui\imgui_impl_gallium.cpp" />
@@ -190,6 +191,10 @@
     <ClCompile Include="src\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\implementations.cpp" />
     <ClCompile Include="src\transformdata.cpp" />
+    <SlangCompileTask Include="shaders\c3d\splitscreen.slang">
+      <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cs_main</Entrypoints>
+      <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cs_main</Entrypoints>
+    </SlangCompileTask>
     <SlangCompileTask Include="shaders\imgui\imgui.slang">
       <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">vs_main;fs_main</Entrypoints>
       <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Release|x64'">vs_main;fs_main</Entrypoints>
@@ -213,6 +218,7 @@
     <ClInclude Include="include\c3d\gameobject.h" />
     <ClInclude Include="include\c3d\gamescene.h" />
     <ClInclude Include="include\c3d\graphics\defaultrenderer.h" />
+    <ClInclude Include="include\c3d\graphics\splitscreenrenderer.h" />
     <ClInclude Include="include\c3d\physics\collision.h" />
     <ClInclude Include="include\c3d\transformdata.h" />
     <ClInclude Include="include\imgui\imconfig.h" />

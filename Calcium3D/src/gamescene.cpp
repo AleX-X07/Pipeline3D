@@ -709,9 +709,11 @@ void GameScene::Render(ga::render::RendererBase& renderPipeline)
 			object->Render({}, renderPipeline);
 	}
 
-	auto camera = m_pImpl->cameras[0]->GetComponent<components::rendering::Camera>();
-
-	renderPipeline.SetCamera(glm::inverse(m_pImpl->cameras[0]->Transform->GlobalMatrix()), camera->ProjectionMatrix());
+	for (auto& c : m_pImpl->cameras)
+	{
+		auto camera = c->GetComponent<components::rendering::Camera>();
+		renderPipeline.SetCamera(glm::inverse(c->Transform->GlobalMatrix()), camera->ProjectionMatrix(), camera->RendererIndex());
+	}
 }
 
 void GameScene::PostRender(ga::render::RendererBase& renderPipeline)

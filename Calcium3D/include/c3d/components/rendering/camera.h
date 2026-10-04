@@ -22,6 +22,7 @@ namespace c3d::components::rendering
 		ga::core::Property<float>     AspectRatio;
 		ga::core::Property<float>     Fov;
 		ga::core::Property<glm::vec2> ZBounds;
+		ga::core::Property<uint32_t>  RendererIndex;
 
 		explicit Camera(GameObject* owner);
 		virtual ~Camera() noexcept;
@@ -29,6 +30,8 @@ namespace c3d::components::rendering
 		void             UpdateMatrix();
 		const glm::mat4& ProjectionMatrix();
 		std::pair<glm::vec3 /* ro */, glm::vec3 /* rd */> Deproject(const glm::vec2& screenCoords); // assumes screenCoords is in PIXELS
+
+		void Update(float t, float dt, c3d::GameSubsystems& subsystems) override;
 
 		void Serialize(ga::core::CttiSerializer& serializer) const override;
 		void Deserialize(ga::core::CttiDeserializer& deserializer) override;

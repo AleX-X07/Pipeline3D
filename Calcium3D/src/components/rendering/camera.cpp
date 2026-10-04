@@ -29,6 +29,7 @@ Camera::Camera(GameObject* owner)
 	Fov = 60.0f;
 	AspectRatio = 1.7f;
 	ZBounds = glm::vec2(0.1f, 100.0f);
+	RendererIndex = 0u;
 
 	m_camImpl->resizeHandler = new ga::core::ObjectMemberDelegate(this, &Camera::OnWindowResize);
 	ga::core::MessageBus::Global().AddRecipient("window:resize"_h, m_camImpl->resizeHandler);
@@ -74,6 +75,12 @@ std::pair<glm::vec3, glm::vec3> Camera::Deproject(const glm::vec2& screenCoords)
 	const glm::vec3 rd = glm::normalize(glm::vec3(farPt) - glm::vec3(nearPt));
 
 	return { ro, rd };
+}
+
+void Camera::Update(float t, float dt, c3d::GameSubsystems& subsystems)
+{
+	if (Fov.HasChanged() || AspectRatio.HasChanged() || ZBounds.HasChanged())
+		m_camImpl->projectionMatrixDirty = true;
 }
 
 void Camera::Serialize(ga::core::CttiSerializer& serializer) const

@@ -443,7 +443,7 @@ void DefaultRenderer::SetEnvironment(uint32_t diffuse, uint32_t specular, float 
 	m_pImpl->environmentIntensity  = intensity;
 }
 
-void DefaultRenderer::SetCamera(const glm::mat4& view, const glm::mat4& projection)
+void DefaultRenderer::SetCamera(const glm::mat4& view, const glm::mat4& projection, uint32_t index /* = 0 */)
 {
 	m_pImpl->camera = {
 		.view       = view,

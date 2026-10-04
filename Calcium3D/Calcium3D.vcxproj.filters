@@ -143,6 +143,9 @@
     <ClCompile Include="src\components\audio\audiolistenercomponent.cpp">
       <Filter>Source Files\components\audio</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\splitscreenrenderer.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\c3d\game.h">
@@ -232,6 +235,9 @@
     <ClInclude Include="include\c3d\components\audio\audiolistenercomponent.h">
       <Filter>Header Files\c3d\components\audio</Filter>
     </ClInclude>
+    <ClInclude Include="include\c3d\graphics\splitscreenrenderer.h">
+      <Filter>Header Files\c3d\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <SlangCompileTask Include="shaders\c3d\gbuffer.slang">
@@ -245,6 +251,9 @@
     </SlangCompileTask>
     <SlangCompileTask Include="shaders\imgui\imgui.slang">
       <Filter>Shader files\imgui</Filter>
+    </SlangCompileTask>
+    <SlangCompileTask Include="shaders\c3d\splitscreen.slang">
+      <Filter>Shader files\c3d</Filter>
     </SlangCompileTask>
   </ItemGroup>
 </Project>

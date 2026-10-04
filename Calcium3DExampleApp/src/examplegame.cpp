@@ -14,6 +14,7 @@
 #include <c3d/components/rendering/environment.h>
 #include <c3d/components/other/lookat.h>
 #include <c3d/graphics/defaultrenderer.h>
+#include <c3d/graphics/splitscreenrenderer.h>
 
 #include <print>
 
@@ -25,7 +26,8 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 {
 	Game::Initialize(platform, gpu);
 
-	m_renderer = std::make_unique<c3d::graphics::DefaultRenderer>(gpu);
+	m_renderer = std::make_unique<c3d::graphics::SplitScreenRenderer>(gpu, c3d::graphics::EScreenSplitDirection::Vertical);
+	((c3d::graphics::SplitScreenRenderer*)m_renderer.get())->SetSplitLine(4.0f, { 1.0f, 0.0f, 1.0f });
 
 	auto mesh1 = m_gameScene.CreateObject("Damaged Helmet");
 	{
@@ -40,19 +42,31 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		mesh2->Transform->Position = { 0.0f, -1.0f, 0.0f };
 	}
 
-	auto camera = m_gameScene.CreateObject("Camera");
+	auto camera0 = m_gameScene.CreateObject("Camera 0");
 	{
-		auto cameraComponent = camera->AddComponent<c3d::components::rendering::Camera>();
-		auto lookAtComponent = camera->AddComponent<c3d::components::other::LookAt>();
+		auto cameraComponent = camera0->AddComponent<c3d::components::rendering::Camera>();
+		cameraComponent->RendererIndex = 0u;
+		cameraComponent->AspectRatio = (16.0f / 9.0f) * 0.5f;
+		auto lookAtComponent = camera0->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = mesh1;
-		camera->Transform->Position = { 0.0f, 1.0f, 5.0f };
+		camera0->Transform->Position = { 0.0f, 1.0f, 5.0f };
 
-		auto listenerComponent = camera->AddComponent<c3d::components::audio::AudioListener>();
+		auto listenerComponent = camera0->AddComponent<c3d::components::audio::AudioListener>();
+	}
+
+	auto camera1 = m_gameScene.CreateObject("Camera 1");
+	{
+		auto cameraComponent = camera1->AddComponent<c3d::components::rendering::Camera>();
+		cameraComponent->RendererIndex = 1u;
+		cameraComponent->AspectRatio = (16.0f / 9.0f) * 0.5f;
+		auto lookAtComponent = camera1->AddComponent<c3d::components::other::LookAt>();
+		lookAtComponent->Target = mesh1;
+		camera1->Transform->Position = { 3.0f, 3.0f, 3.0f };
 	}
 
 	auto envmap = m_gameScene.CreateObject("Envmap");
 	{
-		auto envComponent = camera->AddComponent<c3d::components::rendering::Environment>();
+		auto envComponent = camera0->AddComponent<c3d::components::rendering::Environment>();
 		envComponent->Diffuse = ga::assets::AssetManager::Global().Load<ga::gpu::Image>("/assets/envmap/Tokyo_BigSight_Env.hdr");
 		envComponent->Specular = ga::assets::AssetManager::Global().Load<ga::gpu::Image>("/assets/envmap/Tokyo_BigSight_3k.hdr");
 		envComponent->Intensity = 0.03f;
@@ -100,7 +114,7 @@ void ExampleGame::Deinitialize()
 
 void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 {
-	auto camera = m_gameScene.GetObject("Camera");
+	auto camera = m_gameScene.GetObject("Camera 0");
 
 	glm::vec3 offset = dt * 10.0f * glm::vec3(
 		subsystems.platform.Input().IsHeld(ga::platform::EKey::Left) ? -1.0f : (subsystems.platform.Input().IsHeld(ga::platform::EKey::Right) ? 1.0f : 0.0f),
