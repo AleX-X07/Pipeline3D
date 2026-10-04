@@ -3,6 +3,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <string>
 
 #include <gallium/badge.h>
@@ -59,7 +60,7 @@ namespace c3d
 		//void UnregisterMeshCollider(const ga::Badge<c3d::components::physics::MeshCollider>&, c3d::components::physics::MeshCollider* collider);
 
 		reactphysics3d::RigidBody* GetRigidbody(const ga::Badge<c3d::components::physics::Rigidbody>&, GameObject* object);
-
+		std::optional<float> RayCast(const glm::vec3& ro, const glm::vec3& rd, float tMax = 1e3f);
 
 		void Start();
 		void Clear();

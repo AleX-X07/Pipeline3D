@@ -39,6 +39,21 @@ Rigidbody::~Rigidbody() noexcept
 	delete m_rbImpl;
 }
 
+bool Rigidbody::RayCast(const glm::vec3& ro, const glm::vec3& rd, float tMax /* = 1e3f */)
+{
+	if (m_rbImpl->bodyId)
+	{
+		glm::vec3 re = ro + rd * tMax;
+		rp3d::Vector3 startPoint(ro.x, ro.y, ro.z);
+		rp3d::Vector3 endPoint(re.x, re.y, re.z);
+
+		rp3d::RaycastInfo info {};
+		return m_rbImpl->bodyId->raycast(reactphysics3d::Ray(startPoint, endPoint), info);
+	}
+
+	return false;
+}
+
 void Rigidbody::EnforceTransform()
 {
 	if (m_rbImpl->bodyId)

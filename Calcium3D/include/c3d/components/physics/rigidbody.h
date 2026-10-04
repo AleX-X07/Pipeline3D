@@ -25,6 +25,8 @@ namespace c3d::components::physics
 		explicit Rigidbody(ga::core::CttiDeserializer& deserializer);
 		virtual ~Rigidbody() noexcept;
 
+		bool RayCast(const glm::vec3& ro, const glm::vec3& rd, float tMax = 1e3f);
+
 		void EnforceTransform();
 
 		void FixedUpdate(float t, float dt, c3d::GameSubsystems&) override;

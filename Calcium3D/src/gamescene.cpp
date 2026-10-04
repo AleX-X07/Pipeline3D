@@ -508,6 +508,41 @@ reactphysics3d::RigidBody* GameScene::GetRigidbody(const ga::Badge<c3d::componen
 	return nullptr;
 }
 
+class RaycastCallback final
+	: public rp3d::RaycastCallback
+{
+	std::function<void(const rp3d::RaycastInfo&)> m_cb;
+	rp3d::decimal                                 m_minHit = FLT_MAX;
+public:
+	RaycastCallback(const std::function<void(const rp3d::RaycastInfo&)>& cb) : m_cb(cb) {}
+
+	rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& info)
+	{
+		m_cb(info);
+		return info.hitFraction;
+	}
+};
+
+std::optional<float> GameScene::RayCast(const glm::vec3& ro, const glm::vec3& rd, float tMax /* = 1e3f */)
+{
+	glm::vec3 re = ro + rd * tMax;
+	rp3d::Vector3 startPoint(ro.x, ro.y, ro.z);
+	rp3d::Vector3 endPoint(re.x, re.y, re.z);
+
+	float minT = FLT_MAX;
+
+	auto cb = RaycastCallback([&](const rp3d::RaycastInfo& info) {
+		minT = glm::min(minT, info.hitFraction);
+	});
+
+	m_pImpl->physicsWorld->raycast(rp3d::Ray(startPoint, endPoint), &cb, 0xffff);
+
+	if (minT < FLT_MAX)
+		return minT;
+
+	return std::nullopt;
+}
+
 void GameScene::Start()
 {
 	m_pImpl->processing = true;
