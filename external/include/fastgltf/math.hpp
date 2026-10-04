@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 - 2025 Sean Apeler
+ * Copyright (C) 2022 - 2026 Sean Apeler
  * This file is part of fastgltf <https://github.com/spnda/fastgltf>.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -27,7 +27,7 @@
 #ifndef FASTGLTF_MATH_HPP
 #define FASTGLTF_MATH_HPP
 
-#if !defined(FASTGLTF_USE_STD_MODULE) || !FASTGLTF_USE_STD_MODULE
+#if !defined(FASTGLTF_MODULE)
 #include <cmath>
 #include <functional>
 #include <initializer_list>
@@ -40,7 +40,7 @@
  * The fastgltf::math namespace contains all math functions and types which are needed for working with glTF assets.
  */
 namespace fastgltf::math {
-	FASTGLTF_EXPORT inline constexpr long double pi = 3.1415926535897932385;
+	FASTGLTF_EXPORT inline constexpr long double pi = 3.1415926535897932385L;
 
 	/** Value clamp using std::less */
 	FASTGLTF_EXPORT template <typename T>
@@ -84,7 +84,8 @@ namespace fastgltf::math {
 		}
 
 		/** Creates a new vector with N components from N values in the order X, Y, Z, W */
-		template <typename... Args, std::enable_if_t<sizeof...(Args) == N, bool> = true>
+		template <typename... Args>
+		requires (sizeof...(Args) == N)
 		constexpr explicit vec(Args... args) noexcept : _data { T(std::forward<Args>(args))... } {}
 
 		static constexpr auto fromPointer(T* ptr) noexcept {
@@ -97,37 +98,43 @@ namespace fastgltf::math {
 		constexpr vec(const vec&) noexcept = default;
 		constexpr vec& operator=(const vec& other) noexcept = default;
 
-		template <typename U, std::enable_if_t<!std::is_same_v<T, U>, bool> = true>
+		template <typename U>
+		requires (!std::is_same_v<T, U>)
 		constexpr explicit vec(const vec<U, N>& other) noexcept {
 			for (std::size_t i = 0; i < N; ++i)
 				(*this)[i] = static_cast<T>(other[i]);
 		}
-		template <typename U, std::enable_if_t<!std::is_same_v<T, U>, bool> = true>
-		constexpr vec<T, N>& operator=(const vec<U, N>& other) noexcept {
+		template <typename U>
+		requires (!std::is_same_v<T, U>)
+		constexpr vec& operator=(const vec<U, N>& other) noexcept {
 			for (std::size_t i = 0; i < N; ++i)
 				(*this)[i] = static_cast<T>(other[i]);
 			return *this;
 		}
 
-		template <std::size_t M, std::enable_if_t<M >= N, bool> = true>
+		template <std::size_t M>
+		requires (M >= N)
 		constexpr explicit vec(const vec<T, M>& other) noexcept {
 			for (std::size_t i = 0; i < N; ++i)
 				(*this)[i] = other[i];
 		}
-		template <std::size_t M, std::enable_if_t<M >= N, bool> = true>
-		constexpr vec<T, N>& operator=(const vec<T, M>& other) noexcept {
+		template <std::size_t M>
+		requires (M >= N)
+		constexpr vec& operator=(const vec<T, M>& other) noexcept {
 			for (std::size_t i = 0; i < N; ++i)
 				(*this)[i] = other[i];
 			return *this;
 		}
 
-		template <std::size_t M, std::enable_if_t<M < N, bool> = true>
+		template <std::size_t M>
+		requires (M < N)
 		constexpr explicit vec(const vec<T, M>& other) noexcept : vec(T(0)) {
 			for (std::size_t i = 0; i < M; ++i)
 				(*this)[i] = other[i];
 		}
-		template <std::size_t M, std::enable_if_t<M < N, bool> = true>
-		constexpr vec<T, N>& operator=(const vec<T, M>& other) noexcept {
+		template <std::size_t M>
+		requires (M < N)
+		constexpr vec& operator=(const vec<T, M>& other) noexcept {
 			for (std::size_t i = 0; i < N; ++i)
 				(*this)[i] = i < M ? other[i] : T(0);
 			return *this;
@@ -137,7 +144,7 @@ namespace fastgltf::math {
 			for (auto it = std::begin(list); it != std::end(list); ++it)
 				(*this)[std::distance(std::begin(list), it)] = *it;
 		}
-		constexpr vec<T, N>& operator=(std::initializer_list<T> list) noexcept {
+		constexpr vec& operator=(std::initializer_list<T> list) noexcept {
 			for (auto it = std::begin(list); it != std::end(list); ++it)
 				(*this)[std::distance(std::begin(list), it)] = *it;
 			return *this;
@@ -301,7 +308,8 @@ namespace fastgltf::math {
 			return ret;
 		}
 
-		template <std::size_t M, std::enable_if_t<M < N, bool> = true>
+		template <std::size_t M>
+		requires (M < N)
 		constexpr explicit operator vec<T, M>() const noexcept {
 			vec<T, M> ret;
 			for (std::size_t i = 0; i < M; ++i)
@@ -438,7 +446,8 @@ namespace fastgltf::math {
 		constexpr explicit quat() noexcept : _data {0.f, 0.f, 0.f, 1.f} {}
 
 		/** Creates a new quaternion from 4 floats in the order X, Y, Z, W */
-		template <typename... Args, std::enable_if_t<sizeof...(Args) == 4, bool> = true>
+		template <typename... Args>
+		requires (sizeof...(Args) == 4)
 		constexpr explicit quat(Args... args) noexcept : _data { std::forward<Args>(args)... } {}
 
 		static constexpr auto fromPointer(T* ptr) noexcept {
@@ -616,8 +625,8 @@ namespace fastgltf::math {
 	/**
 	 * A matrix stored in column major order.
 	 *
-	 * @param N Number of rows, or the length of a single column.
-	 * @param M Number of columns, or the length of a single row.
+	 * @tparam N Number of rows, or the length of a single column.
+	 * @tparam M Number of columns, or the length of a single row.
 	 */
 	template <typename T, std::size_t N, std::size_t M>
 	class mat {
@@ -640,11 +649,13 @@ namespace fastgltf::math {
 		}
 
 		/** Creates a matrix from M vectors */
-		template <typename... Args, std::enable_if_t<sizeof...(Args) == M, bool> = true>
+		template <typename... Args>
+		requires (sizeof...(Args) == M)
 		constexpr explicit mat(Args... args) noexcept : _data { std::forward<Args>(args)... } {}
 
 		/** Creates a matrix from N * M floats */
-		template <typename... Args, std::enable_if_t<sizeof...(Args) == M * N, bool> = true>
+		template <typename... Args>
+		requires (sizeof...(Args) == M * N)
 		constexpr explicit mat(Args... args) noexcept {
 			const auto tuple = std::forward_as_tuple(args...);
 			copy_values(tuple, std::make_integer_sequence<std::size_t, sizeof...(Args)>());
@@ -653,14 +664,16 @@ namespace fastgltf::math {
 		constexpr mat(const mat& other) = default;
 
 		/** Truncates the matrix to a smaller one, discarding the additional rows and/or colums  */
-		template <std::size_t Q, std::size_t P, std::enable_if_t<N < Q && M < P, bool> = true>
+		template <std::size_t Q, std::size_t P>
+		requires (N < Q && M < P)
 		constexpr explicit mat(const mat<T, Q, P>& other) noexcept {
 			for (std::size_t i = 0; i < columns(); ++i)
 				(*this).col(i) = vec<T, N>(other.col(i));
 		}
 
 		/** Creates a larger matrix from a smaller one, while initializing the new components to identity  */
-		template <std::size_t Q, std::size_t P, std::enable_if_t<Q < N && P < M, bool> = true>
+		template <std::size_t Q, std::size_t P>
+		requires (Q < N && P < M)
 		constexpr explicit mat(const mat<T, Q, P>& other) noexcept : mat(T(1)) {
 			for (std::size_t i = 0; i < other.columns(); ++i)
 				(*this).col(i) = vec<T, N>(other.col(i));
@@ -753,7 +766,8 @@ namespace fastgltf::math {
 			return ret;
 		}
 
-		template <std::size_t P, std::size_t Q, std::enable_if_t<M == P, bool> = true>
+		template <std::size_t P, std::size_t Q>
+		requires (M == P)
 		constexpr auto operator*(const mat<T, P, Q>& other) const noexcept {
 			mat<T, N, Q> ret(0.f);
 			for (std::size_t i = 0; i < other.columns(); ++i)
@@ -819,17 +833,19 @@ namespace fastgltf::math {
 	/** Computes the inverse of the 2x2 matrix */
 	FASTGLTF_EXPORT template <typename T>
 	[[nodiscard]] auto inverse(const mat<T, 2, 2>& m) noexcept {
-		return mat<T, 2, 2>(m.col(1).y(), -m.col(0).y(), -m.col(1).x(), m.col(0).x()) / determinant(m);
+		const auto inv_determinant = T(1) / determinant(m);
+		return mat<T, 2, 2>(m.col(1).y(), -m.col(0).y(), -m.col(1).x(), m.col(0).x()) * inv_determinant;
 	}
 
 	/** Computes the inverse of the 3x3 matrix */
 	FASTGLTF_EXPORT template <typename T>
 	[[nodiscard]] auto inverse(const mat<T, 3, 3>& m) noexcept {
+		const auto inv_determinant = T(1) / determinant(m);
 		auto inv = mat<T, 3, 3>(
 			m.col(1)[1] * m.col(2)[2] - m.col(2)[1] * m.col(1)[2], m.col(2)[1] * m.col(0)[2] - m.col(0)[1] * m.col(2)[2], m.col(0)[1] * m.col(1)[2] - m.col(1)[1] * m.col(0)[2],
 			m.col(2)[0] * m.col(1)[2] - m.col(1)[0] * m.col(2)[2], m.col(0)[0] * m.col(2)[2] - m.col(2)[0] * m.col(0)[2], m.col(1)[0] * m.col(0)[2] - m.col(0)[0] * m.col(1)[2],
 			m.col(1)[0] * m.col(2)[1] - m.col(2)[0] * m.col(1)[1], m.col(2)[0] * m.col(0)[1] - m.col(0)[0] * m.col(2)[1], m.col(0)[0] * m.col(1)[1] - m.col(1)[0] * m.col(0)[1]);
-		return inv / determinant(m);
+		return inv * inv_determinant;
 	}
 
 	/** Computes the affine inverse of a 4x4 matrix */
@@ -844,9 +860,9 @@ namespace fastgltf::math {
 			vec<T, 4>(l.x(), l.y(), l.z(), 1.f));
 	}
 
-	/** Inverts a 4x4 matrix */
+	/** Computes the inverse of a 4x4 matrix */
 	FASTGLTF_EXPORT template <typename T>
-	[[nodiscard]] auto invert(const mat<T, 4, 4>& m) noexcept {
+	[[nodiscard]] auto inverse(const mat<T, 4, 4>& m) noexcept {
 		const auto d = m.data();
 		T a00 = d[0], a10 = d[4], a20 = d[8],  a30 = d[12],
 		  a01 = d[1], a11 = d[5], a21 = d[9],  a31 = d[13],
@@ -861,11 +877,15 @@ namespace fastgltf::math {
 		// Calculate the determinant
 		T det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
-		return det == T(0) ? mat<T, 4, 4>() : mat<T, 4, 4>(
+		if (det == T(0))
+			return mat<T, 4, 4>();
+
+		const auto inv_determinant = T(1) / det;
+		return mat<T, 4, 4>(
 			a11 * b11 - a12 * b10 + a13 * b09, a02 * b10 - a01 * b11 - a03 * b09, a31 * b05 - a32 * b04 + a33 * b03, a22 * b04 - a21 * b05 - a23 * b03,
 			a12 * b08 - a10 * b11 - a13 * b07, a00 * b11 - a02 * b08 + a03 * b07, a32 * b02 - a30 * b05 - a33 * b01, a20 * b05 - a22 * b02 + a23 * b01,
 			a10 * b10 - a11 * b08 + a13 * b06, a01 * b08 - a00 * b10 - a03 * b06, a30 * b04 - a31 * b02 + a33 * b00, a21 * b02 - a20 * b04 - a23 * b00,
-			a11 * b07 - a10 * b09 - a12 * b06, a00 * b09 - a01 * b07 + a02 * b06, a31 * b01 - a30 * b03 - a32 * b00, a20 * b03 - a21 * b01 + a22 * b00 ) * ( T(1) / det );
+			a11 * b07 - a10 * b09 - a12 * b06, a00 * b09 - a01 * b07 + a02 * b06, a31 * b01 - a30 * b03 - a32 * b00, a20 * b03 - a21 * b01 + a22 * b00) * inv_determinant;
 	}
 
 	/** Translates a given transform matrix by the world space translation vector */
