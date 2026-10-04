@@ -32,7 +32,8 @@ int32_t Game::m_Run(Game& game)
 	auto platform = std::make_unique<ga::platform::Platform>(ga::platform::PlatformInfo {
 		.appName              = game.Title(),
 		.appVersion           = game.Version(),
-		.requestedSurfaceSize = { 1600u, 900u }
+		.requestedSurfaceSize = { 1600u, 900u },
+		.requestResizableWindow = true
 	});
 	auto gpu = std::make_unique<ga::gpu::Device>(*platform);
 	
@@ -82,7 +83,11 @@ int32_t Game::m_Run(Game& game)
 				.samplingMode = ga::gpu::EImageSamplingMode::ClampToEdge,
 				.debugName    = "Backbuffer"
 			});
+
+			ga::core::MessageBus::Global().Post("window:resize"_h, ga::platform::SurfaceResizeData {{{ currentFrame.image.Size().x, currentFrame.image.Size().y }}});
 		}
+
+		ga::core::MessageBus::Global().Poll();
 
 #ifdef C3D_ENABLE_UI
 		ImGui_ImplGallium_NewFrame();

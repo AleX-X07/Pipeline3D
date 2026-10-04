@@ -46,7 +46,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	{
 		auto cameraComponent = camera0->AddComponent<c3d::components::rendering::Camera>();
 		cameraComponent->RendererIndex = 0u;
-		cameraComponent->AspectRatio = (16.0f / 9.0f) * 0.5f;
+		cameraComponent->StretchFactor = 0.5f;
 		auto lookAtComponent = camera0->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = mesh1;
 		camera0->Transform->Position = { 0.0f, 1.0f, 5.0f };
@@ -58,7 +58,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	{
 		auto cameraComponent = camera1->AddComponent<c3d::components::rendering::Camera>();
 		cameraComponent->RendererIndex = 1u;
-		cameraComponent->AspectRatio = (16.0f / 9.0f) * 0.5f;
+		cameraComponent->StretchFactor = 0.5f;
 		auto lookAtComponent = camera1->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = mesh1;
 		camera1->Transform->Position = { 3.0f, 3.0f, 3.0f };

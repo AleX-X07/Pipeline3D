@@ -27,7 +27,8 @@ Camera::Camera(GameObject* owner)
 	, m_camImpl(new Internal)
 {
 	Fov = 60.0f;
-	AspectRatio = 1.7f;
+	AspectRatio = 16.0f / 9.0f;
+	StretchFactor = 1.0f,
 	ZBounds = glm::vec2(0.1f, 100.0f);
 	RendererIndex = 0u;
 
@@ -45,7 +46,7 @@ void Camera::UpdateMatrix()
 {
 	if (m_camImpl->projectionMatrixDirty)
 	{
-		m_camImpl->projectionMatrix = glm::perspective(glm::radians(Fov()), AspectRatio(), ZBounds->x, ZBounds->y);
+		m_camImpl->projectionMatrix = glm::perspective(glm::radians(Fov()), AspectRatio() * StretchFactor(), ZBounds->x, ZBounds->y);
 		m_camImpl->projectionMatrixDirty = false;
 	}
 }

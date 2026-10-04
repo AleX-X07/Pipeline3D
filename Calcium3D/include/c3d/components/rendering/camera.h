@@ -20,6 +20,7 @@ namespace c3d::components::rendering
 
 	public:
 		ga::core::Property<float>     AspectRatio;
+		ga::core::Property<float>     StretchFactor;
 		ga::core::Property<float>     Fov;
 		ga::core::Property<glm::vec2> ZBounds;
 		ga::core::Property<uint32_t>  RendererIndex;
