@@ -1,5 +1,11 @@
 #include "raquettecomponent.h"
 
+#include <gallium/platform/platform.h>
+#include <gallium/platform/input.h>
+
+#include <c3d/game.h>
+#include <c3d/gameobject.h>
+
 RaquetteComponent::RaquetteComponent(c3d::GameObject* owner) :
 	c3d::Component(owner)
 {
@@ -14,43 +20,182 @@ RaquetteComponent::RaquetteComponent(ga::core::CttiDeserializer& deserializer) :
 
 void RaquetteComponent::Update(float f, float dt, c3d::GameSubsystems& subsystems)
 {
-	
+	float finalSpeed;
+
+	bool left = subsystems.platform.Input().IsHeld(ga::platform::EKey::A);
+	bool right = subsystems.platform.Input().IsHeld(ga::platform::EKey::D);
+
+	if (left) 
+	{
+		finalSpeed = -speed;
+	}
+	else if (right)
+	{
+		finalSpeed = speed;
+	}
+	else
+	{
+		finalSpeed = 0.0f;
+	}
+
+	glm::vec3 offset =
+	{
+		center.x + glm::cos(dt * speed * glm::pi<float>()) * r,
+		0.0f,
+		center.z + glm::sin(dt * speed * glm::pi<float>()) * r
+	};
+
+	GetGameObject()->Transform->Position += offset;
 }
 
-void RaquetteComponent::CreateRectangle(float kWIDTH, float kHEIGHT, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<uint32_t>& indices)
+void RaquetteComponent::SetVar(float _r, glm::vec3 _center, float _speed)
 {
-	// Première face
-	positions.push_back({ 0 ,0, 0 });
-	positions.push_back({ 0 + kWIDTH, 0, 0 });
-	positions.push_back({0 + kWIDTH, 0 + kHEIGHT, 0 });
-	positions.push_back({0 , 0 + kHEIGHT, 0 });
+	r = _r;
+	center = _center;
+	speed = _speed;
+}
 
-	normals.push_back({-1,0,0});
-	normals.push_back({-1,0,0});
-	normals.push_back({-1,0,0});
-	normals.push_back({-1,0,0});
+void RaquetteComponent::CreateFace(std::vector<glm::vec3> fPositions, std::vector<uint32_t> fIndices, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<uint32_t>& indices)
+{
+	float test = fPositions.size();
 
-	indices.push_back(0);
-	indices.push_back(1);
-	indices.push_back(2);
+	if (fPositions.size() <= 4.0f) 
+	{
+		glm::vec3 u;
+		glm::vec3 v;
 
-	indices.push_back(0);
-	indices.push_back(2);
-	indices.push_back(3);
+		for (int X = 0; X < 4.0f; X++) 
+		{
+			positions.push_back(fPositions[X]);
+			if (X == 3) 
+			{
+				u =
+				{
+					fPositions[X-1].x - fPositions[X].x,
+					fPositions[X-1].y - fPositions[X].y,
+					fPositions[X-1].z - fPositions[X].z,
+				};
+				v =
+				{
+					fPositions[X - 1].x - fPositions[X - 2].x,
+					fPositions[X - 1].y - fPositions[X - 2].y,
+					fPositions[X - 1].z - fPositions[X - 2].z,
+				};
+			}
+		}
 
-	// Deuxième face
-	positions.push_back({ 0 + kWIDTH, 0, 0 });
-	positions.push_back({ 0 + kWIDTH, 0, 0 + kWIDTH });
-	positions.push_back({ 0 + kWIDTH, 0 + kHEIGHT, 0 + kWIDTH });
-	positions.push_back({ 0 + kWIDTH, 0 + kHEIGHT, 0 });
+		glm::vec3 n = glm::cross(u,v);
+		glm::vec3 nNorm = glm::normalize(n);
+
+		for (int X = 0; X < 4; X++) {
+			normals.push_back(nNorm);
+		}
+	}
+
+	if (fIndices.size() <= 6.0f) 
+	{
+		for (int X = 0; X < 6.0f; X++) 
+		{
+			indices.push_back(fIndices[X]);
+		}
+	}
+}
+
+void RaquetteComponent::CreateRectangle(float kWIDTH, float kHEIGHT, float kDEPTH, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<uint32_t>& indices)
+{
+
+	//Première face
+	std::vector<glm::vec3> posF1 = 
+	{
+		{ 0, 0, 0 },
+		{ 0 + kWIDTH, 0, 0 },
+		{ 0 + kWIDTH, 0 + kHEIGHT, 0 },
+		{0 , 0 + kHEIGHT, 0 }
+	};
+
+	std::vector<uint32_t> indF1 =
+	{
+		0,1,2,
+		0,2,3
+	};
+
+	CreateFace(posF1, indF1, positions, normals, indices);
+
+	//Deuxième face
+	std::vector<glm::vec3> posF2 =
+	{
+		{ 0 + kWIDTH, 0, 0 },
+		{ 0 + kWIDTH, 0, 0 + kDEPTH },
+		{ 0 + kWIDTH, 0 + kHEIGHT, 0 + kDEPTH },
+		{ 0 + kWIDTH, 0 + kHEIGHT, 0 }
+	};
+
+	std::vector<uint32_t> indF2 =
+	{
+		4,5,6,
+		4,6,7
+	};
+
+	CreateFace(posF2, indF2, positions, normals, indices);
+
+	//Troisème face
+	std::vector<glm::vec3> posF3 =
+	{
+		{ 0, 0, 0 + kDEPTH },
+		{ 0 + kWIDTH, 0, 0 + kDEPTH },
+		{ 0 + kWIDTH, 0 + kHEIGHT, 0 + kDEPTH},
+		{0 , 0 + kHEIGHT, 0 + kDEPTH}
+	};
+
+	std::vector<uint32_t> indF3 =
+	{
+		8,9,10,
+		8,10,11
+	};
+
+	CreateFace(posF3, indF3, positions, normals, indices);
+
+	//Quatrième face
+	std::vector<glm::vec3> posF4 =
+	{
+		{ 0 , 0, 0 },
+		{ 0 , 0, 0 + kDEPTH },
+		{ 0 , 0 + kHEIGHT, 0 + kDEPTH },
+		{ 0 , 0 + kHEIGHT, 0 }
+	};
+
+	std::vector<uint32_t> indF4 =
+	{
+		12,13,14,
+		12,14,15
+	};
+
+	CreateFace(posF4, indF4, positions, normals, indices);
+
+	// Cinquième et dernière face, pas besoin de faire celle de dessous.
+	std::vector<glm::vec3> posF5 =
+	{
+		{ 0 , 0 + kHEIGHT, 0 },
+		{ 0 + kWIDTH, 0 + kHEIGHT, 0 },
+		{ 0 + kWIDTH, 0 + kHEIGHT, 0 + kDEPTH },
+		{ 0 , 0 + kHEIGHT, 0 + kDEPTH }
+	};
+
+	std::vector<uint32_t> indF5 =
+	{
+		16,17,18,
+		16,18,19
+	};
+
+	CreateFace(posF5, indF5, positions, normals, indices);
 
 }
 
-void RaquetteComponent::CreateProceduralMesh(ga::gpu::Device& gpu, float kWIDTH, float kHEIGHT)
+void RaquetteComponent::CreateProceduralMesh(ga::gpu::Device& gpu, float kWIDTH, float kHEIGHT, float kDEPTH)
 {
 	std::vector<glm::vec3> positions, normals;
 	std::vector<uint32_t> indices;
-	CreateRectangle(kWIDTH, kHEIGHT, positions, normals, indices);
+	CreateRectangle(kWIDTH, kHEIGHT, kDEPTH, positions, normals, indices);
 
 	myMesh.UploadStream<ga::render::EVertexStream::Position>(gpu, positions);
 	myMesh.UploadStream<ga::render::EVertexStream::Normal>(gpu, normals);

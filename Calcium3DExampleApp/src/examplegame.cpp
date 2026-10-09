@@ -62,16 +62,20 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	{
 		float width = 2.0f;
 		float height = 1.0f;
+		float depth = 2.0f;
 
-		float posXCube = 0.0f;
+		float r = 5.0f;
+		glm::vec3 center = { 0,0,0 };
+		float speed = 1 / 12;
+
+		mesh3->Transform->Position = { 0.0f, 0.0f, 0.0f };
 
 		auto renderMeshComponent = mesh3->AddComponent<c3d::components::rendering::Mesh>();
 		auto createMeshComponent = mesh3->AddComponent<RaquetteComponent>();
 
-		createMeshComponent->CreateProceduralMesh(gpu, width, height);
+		createMeshComponent->SetVar(r, center, speed);
+		createMeshComponent->CreateProceduralMesh(gpu, width, height, depth);
 		renderMeshComponent->Asset = createMeshComponent->GetMyMesh();
-
-		mesh3->Transform->Position = { posXCube, 0.0f, 0.0f};
 	}
 
 	auto target = mesh3;
@@ -132,11 +136,11 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		lookAtComponent->Target = target;
 	}
 
-	auto sound = m_gameScene.CreateObject("Audio");
-	{
-		auto audioComp = sound->AddComponent<c3d::components::audio::AudioSource>();
-		audioComp->Sound = ga::assets::AssetManager::Global().Load<ga::audio::SoundHandle>("/assets/evoke26.mp3");
-	}
+	//auto sound = m_gameScene.CreateObject("Audio");
+	//{
+	//	auto audioComp = sound->AddComponent<c3d::components::audio::AudioSource>();
+	//	audioComp->Sound = ga::assets::AssetManager::Global().Load<ga::audio::SoundHandle>("/assets/evoke26.mp3");
+	//}
 }
 
 void ExampleGame::Deinitialize()
@@ -152,7 +156,7 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 
 	glm::vec3 offset = dt * 10.0f * glm::vec3(
 		subsystems.platform.Input().IsHeld(ga::platform::EKey::Left) ? -1.0f : (subsystems.platform.Input().IsHeld(ga::platform::EKey::Right) ? 1.0f : 0.0f),
-		0.0f,
+		subsystems.platform.Input().IsHeld(ga::platform::EKey::P) ? -1.0f : (subsystems.platform.Input().IsHeld(ga::platform::EKey::M) ? 1.0f : 0.0f),
 		subsystems.platform.Input().IsHeld(ga::platform::EKey::Up) ? -1.0f : (subsystems.platform.Input().IsHeld(ga::platform::EKey::Down) ? 1.0f : 0.0f)
 	);
 
