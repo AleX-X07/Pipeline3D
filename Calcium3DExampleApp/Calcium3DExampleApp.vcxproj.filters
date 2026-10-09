@@ -17,9 +17,15 @@
     <ClCompile Include="src\examplegame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\cylindercomponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\examplegame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cylindercomponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

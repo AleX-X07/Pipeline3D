@@ -16,6 +16,8 @@
 #include <c3d/graphics/defaultrenderer.h>
 #include <c3d/graphics/splitscreenrenderer.h>
 
+#include <cylindercomponent.h>
+
 #include <print>
 
 ExampleGame::ExampleGame()
@@ -29,10 +31,15 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	m_renderer = std::make_unique<c3d::graphics::SplitScreenRenderer>(gpu, c3d::graphics::EScreenSplitDirection::Vertical);
 	((c3d::graphics::SplitScreenRenderer*)m_renderer.get())->SetSplitLine(4.0f, { 1.0f, 0.0f, 1.0f });
 
-	auto mesh1 = m_gameScene.CreateObject("Damaged Helmet");
+	auto mesh1 = m_gameScene.CreateObject("Cylindre");
 	{
-		auto mesh1Component = mesh1->AddComponent<c3d::components::rendering::Mesh>();
-		mesh1Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/DamagedHelmet.glb");
+		auto meshComponent = mesh1->AddComponent<c3d::components::rendering::Mesh>();
+		auto createCylinderComponent = mesh1->AddComponent<CylinderComponent>();
+
+		createCylinderComponent->CreateProceduralMesh(gpu, 2.0f, 0.5f, 360, 180);
+		meshComponent->Asset = createCylinderComponent->GetMyMesh();
+
+		//mesh1Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/DamagedHelmet.glb");
 	}
 
 	auto mesh2 = m_gameScene.CreateObject("Box");
