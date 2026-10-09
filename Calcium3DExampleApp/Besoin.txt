@@ -1,0 +1,18 @@
+CasseBrique3D :
+
+Modèle 3D :
+
+- Raquette
+- Boule
+- Cylindre
+- Sol
+- Bloc autour du cylindre
+
+Programmation :
+
+- Mouvement de la raquette
+- Camera qui suis la raquette
+- Détection collision
+- Renvoi de la balle
+- Destruction Bloc
+

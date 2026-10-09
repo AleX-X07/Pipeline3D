@@ -2,10 +2,12 @@
 
 #include <gallium/platform/platform.h>
 #include <gallium/platform/input.h>
+
 #include <gallium/gpu/device.h>
 #include <gallium/gpu/commandbuffer.h>
 
 #include <c3d/gameobject.h>
+
 #include <c3d/components/audio/audiosourcecomponent.h>
 #include <c3d/components/audio/audiolistenercomponent.h>
 #include <c3d/components/rendering/camera.h>
@@ -13,8 +15,12 @@
 #include <c3d/components/rendering/mesh.h>
 #include <c3d/components/rendering/environment.h>
 #include <c3d/components/other/lookat.h>
+
 #include <c3d/graphics/defaultrenderer.h>
 #include <c3d/graphics/splitscreenrenderer.h>
+
+#include <spherecomponent.h>
+#include <raquettecomponent.h>
 
 #include <print>
 
@@ -26,43 +32,71 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 {
 	Game::Initialize(platform, gpu);
 
-	m_renderer = std::make_unique<c3d::graphics::SplitScreenRenderer>(gpu, c3d::graphics::EScreenSplitDirection::Vertical);
-	((c3d::graphics::SplitScreenRenderer*)m_renderer.get())->SetSplitLine(4.0f, { 1.0f, 0.0f, 1.0f });
+	//m_renderer = std::make_unique<c3d::graphics::SplitScreenRenderer>(gpu, c3d::graphics::EScreenSplitDirection::Vertical);
+	//((c3d::graphics::SplitScreenRenderer*)m_renderer.get())->SetSplitLine(4.0f, { 1.0f, 0.0f, 1.0f });
+	m_renderer = std::make_unique<c3d::graphics::DefaultRenderer>(gpu);
 
-	auto mesh1 = m_gameScene.CreateObject("Damaged Helmet");
-	{
-		auto mesh1Component = mesh1->AddComponent<c3d::components::rendering::Mesh>();
-		mesh1Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/DamagedHelmet.glb");
-	}
+	//auto mesh1 = m_gameScene.CreateObject("BoulePlay");
+	//{
+	//	float r = 0.5f;
+
+	//	auto renderComponent = mesh1->AddComponent<c3d::components::rendering::Mesh>();
+	//	auto createMeshComponent = mesh1->AddComponent<SphereComponent>();
+
+	//	createMeshComponent->CreateProceduralMesh(gpu, 2.0f, r, 360, 180);
+	//	renderComponent->Asset = createMeshComponent->GetMyMesh();
+
+	//	mesh1->Transform->Position = {0.0f,0.0f + r, 0.0f};
+
+	//	//mesh1Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/DamagedHelmet.glb");
+	//}
 
 	auto mesh2 = m_gameScene.CreateObject("Box");
 	{
 		auto mesh2Component = mesh2->AddComponent<c3d::components::rendering::Mesh>();
 		mesh2Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/plane.glb");
-		mesh2->Transform->Position = { 0.0f, -1.0f, 0.0f };
+		mesh2->Transform->Position = { 0.0f, 0.0f, 0.0f };
 	}
+
+	auto mesh3 = m_gameScene.CreateObject("Raquette");
+	{
+		float width = 2.0f;
+		float height = 1.0f;
+
+		float posXCube = 0.0f;
+
+		auto renderMeshComponent = mesh3->AddComponent<c3d::components::rendering::Mesh>();
+		auto createMeshComponent = mesh3->AddComponent<RaquetteComponent>();
+
+		createMeshComponent->CreateProceduralMesh(gpu, width, height);
+		renderMeshComponent->Asset = createMeshComponent->GetMyMesh();
+
+		mesh3->Transform->Position = { posXCube, 0.0f, 0.0f};
+	}
+
+	auto target = mesh3;
 
 	auto camera0 = m_gameScene.CreateObject("Camera 0");
 	{
 		auto cameraComponent = camera0->AddComponent<c3d::components::rendering::Camera>();
 		cameraComponent->RendererIndex = 0u;
-		cameraComponent->StretchFactor = 0.5f;
+		//cameraComponent->StretchFactor = 0.5f;
 		auto lookAtComponent = camera0->AddComponent<c3d::components::other::LookAt>();
-		lookAtComponent->Target = mesh1;
+		lookAtComponent->Target = target;
 		camera0->Transform->Position = { 0.0f, 1.0f, 5.0f };
 
 		auto listenerComponent = camera0->AddComponent<c3d::components::audio::AudioListener>();
 	}
 
-	auto camera1 = m_gameScene.CreateObject("Camera 1");
-	{
-		auto cameraComponent = camera1->AddComponent<c3d::components::rendering::Camera>();
-		cameraComponent->RendererIndex = 1u;
-		cameraComponent->StretchFactor = 0.5f;
-		auto lookAtComponent = camera1->AddComponent<c3d::components::other::LookAt>();
-		lookAtComponent->Target = mesh1;
-		camera1->Transform->Position = { 3.0f, 3.0f, 3.0f };
-	}
+	//auto camera1 = m_gameScene.CreateObject("Camera 1");
+	//{
+	//	auto cameraComponent = camera1->AddComponent<c3d::components::rendering::Camera>();
+	//	cameraComponent->RendererIndex = 1u;
+	//	cameraComponent->StretchFactor = 0.5f;
+	//	auto lookAtComponent = camera1->AddComponent<c3d::components::other::LookAt>();
+	//	lookAtComponent->Target = mesh1;
+	//	camera1->Transform->Position = { 3.0f, 3.0f, 3.0f };
+	//}
 
 	auto envmap = m_gameScene.CreateObject("Envmap");
 	{
@@ -82,7 +116,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		light1->Transform->Position = { -3.0f, 3.0f, -3.0f };
 
 		auto lookAtComponent = light1->AddComponent<c3d::components::other::LookAt>();
-		lookAtComponent->Target = mesh1;
+		lookAtComponent->Target = target;
 	}
 
 	auto light2 = m_gameScene.CreateObject("Light2");
@@ -95,7 +129,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		light2->Transform->Position = { -3.0f, 3.0f, 3.0f };
 
 		auto lookAtComponent = light2->AddComponent<c3d::components::other::LookAt>();
-		lookAtComponent->Target = mesh1;
+		lookAtComponent->Target = target;
 	}
 
 	auto sound = m_gameScene.CreateObject("Audio");
