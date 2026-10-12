@@ -32,14 +32,14 @@
     <ClCompile Include="src\spherecomponent.cpp">
       <Filter>Source Files\Component\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="src\raquettecomponent.cpp">
-      <Filter>Source Files\Component\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="src\cubecomponent.cpp">
       <Filter>Source Files\Component\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\cylindercomponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Component\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\raquettecomponent.cpp">
+      <Filter>Source Files\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -49,14 +49,14 @@
     <ClInclude Include="include\spherecomponent.h">
       <Filter>Header Files\Component\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="include\raquettecomponent.h">
-      <Filter>Header Files\Component\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="include\cubecomponent.h">
       <Filter>Header Files\Component\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="include\cylindercomponent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Component\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\raquettecomponent.h">
+      <Filter>Header Files\Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
