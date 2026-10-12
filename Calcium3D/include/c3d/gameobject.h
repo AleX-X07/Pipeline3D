@@ -64,10 +64,10 @@ namespace c3d
 			return nullptr;
 		}
 
-		template<typename T> T* AddComponent()
+		template<typename T, typename... ARGS> T* AddComponent(ARGS... args)
 		{
 			static_assert(std::is_base_of<Component, T>::value, "T must derive directly or indirectly from Component");
-			return AddComponent(T::GetTypeStatic(), new T(this))->As<T>();
+			return AddComponent(T::GetTypeStatic(), new T(this, args...))->As<T>();
 		}
 
 		template<typename T> void RemoveComponent()

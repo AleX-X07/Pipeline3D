@@ -59,7 +59,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		mesh2->Transform->Position = { 0.0f, 0.0f, 0.0f };
 	}
 
-	auto mesh3 = m_gameScene.CreateObject("Cube");
+	auto mesh3 = m_gameScene.CreateObject("Raquette");
 	{
 		float width = 2.0f;
 		float height = 1.0f;
@@ -73,6 +73,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 
 		auto renderMeshComponent = mesh3->AddComponent<c3d::components::rendering::Mesh>();
 		auto createMeshComponent = mesh3->AddComponent<CubeComponent>();
+		auto movementComponent = mesh3->AddComponent<RaquetteComponent>(5.0f, glm::vec3{ 0.0f, 0.0f, 0.0f }, 5.0f);
 
 		//createMeshComponent->SetVar(r, center, speed);
 		createMeshComponent->CreateProceduralMesh(gpu, width, height, depth);
