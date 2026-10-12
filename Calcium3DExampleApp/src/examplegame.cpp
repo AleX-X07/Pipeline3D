@@ -36,20 +36,21 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	//((c3d::graphics::SplitScreenRenderer*)m_renderer.get())->SetSplitLine(4.0f, { 1.0f, 0.0f, 1.0f });
 	m_renderer = std::make_unique<c3d::graphics::DefaultRenderer>(gpu);
 
-	//auto mesh1 = m_gameScene.CreateObject("BoulePlay");
-	//{
-	//	float r = 0.5f;
+	auto mesh1 = m_gameScene.CreateObject("BoulePlay");
+	{
+		float posStart = 4.0f;
+		float r = 0.5f;
 
-	//	auto renderComponent = mesh1->AddComponent<c3d::components::rendering::Mesh>();
-	//	auto createMeshComponent = mesh1->AddComponent<SphereComponent>();
+		auto renderComponent = mesh1->AddComponent<c3d::components::rendering::Mesh>();
+		auto createMeshComponent = mesh1->AddComponent<SphereComponent>();
 
-	//	createMeshComponent->CreateProceduralMesh(gpu, 2.0f, r, 360, 180);
-	//	renderComponent->Asset = createMeshComponent->GetMyMesh();
+		createMeshComponent->CreateProceduralMesh(gpu, 2.0f, r, 360, 180);
+		renderComponent->Asset = createMeshComponent->GetMyMesh();
 
-	//	mesh1->Transform->Position = {0.0f,0.0f + r, 0.0f};
+		mesh1->Transform->Position = { posStart,0.0f + r, 0.0f };
 
-	//	//mesh1Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/DamagedHelmet.glb");
-	//}
+		//mesh1Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/DamagedHelmet.glb");
+	}
 
 	auto mesh2 = m_gameScene.CreateObject("Box");
 	{
@@ -58,7 +59,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		mesh2->Transform->Position = { 0.0f, 0.0f, 0.0f };
 	}
 
-	auto mesh3 = m_gameScene.CreateObject("Raquette");
+	/*auto mesh3 = m_gameScene.CreateObject("Raquette");
 	{
 		float width = 2.0f;
 		float height = 1.0f;
@@ -76,9 +77,9 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		createMeshComponent->SetVar(r, center, speed);
 		createMeshComponent->CreateProceduralMesh(gpu, width, height, depth);
 		renderMeshComponent->Asset = createMeshComponent->GetMyMesh();
-	}
+	}*/
 
-	auto target = mesh3;
+	auto target = mesh1;
 
 	auto camera0 = m_gameScene.CreateObject("Camera 0");
 	{
