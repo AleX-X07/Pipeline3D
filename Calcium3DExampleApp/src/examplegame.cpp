@@ -37,6 +37,16 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	//((c3d::graphics::SplitScreenRenderer*)m_renderer.get())->SetSplitLine(4.0f, { 1.0f, 0.0f, 1.0f });
 	m_renderer = std::make_unique<c3d::graphics::DefaultRenderer>(gpu);
 
+	auto mesh4 = m_gameScene.CreateObject("Cylindre");
+	{
+		auto meshComponent = mesh4->AddComponent<c3d::components::rendering::Mesh>();
+		auto createCylinderComponent = mesh4->AddComponent<CylinderComponent>();
+
+		createCylinderComponent->CreateProceduralMesh(gpu, 2.0f, 0.5f, 360, 180);
+		meshComponent->Asset = createCylinderComponent->GetMyMesh();
+
+	}
+
 	auto mesh1 = m_gameScene.CreateObject("BoulePlay");
 	{
 		float r = 0.5f;
@@ -49,7 +59,6 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 
 		mesh1->Transform->Position = { 4.0f ,0.0f + r, 0.0f };
 
-		//mesh1Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/DamagedHelmet.glb");
 	}
 
 	auto mesh2 = m_gameScene.CreateObject("Box");
@@ -66,29 +75,18 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		float depth = 2.0f;
 
 		float r = 5.0f;
-		glm::vec3 center = { 0,0,0 };
-		float speed = 1 / 12;
+		glm::vec3 center = m_gameScene.GetObject("Cylindre")->Transform->Position;
+		float speed = 5.0f;
 
 		mesh3->Transform->Position = { 0.0f, 0.0f, 4.0f };
 
 		auto renderMeshComponent = mesh3->AddComponent<c3d::components::rendering::Mesh>();
 		auto createMeshComponent = mesh3->AddComponent<CubeComponent>();
-		auto movementComponent = mesh3->AddComponent<RaquetteComponent>(5.0f, glm::vec3{ 0.0f, 0.0f, 0.0f }, 5.0f);
+		auto movementComponent = mesh3->AddComponent<RaquetteComponent>(r, center, speed);
 
 		//createMeshComponent->SetVar(r, center, speed);
 		createMeshComponent->CreateProceduralMesh(gpu, width, height, depth);
 		renderMeshComponent->Asset = createMeshComponent->GetMyMesh();
-	}
-
-	auto mesh4 = m_gameScene.CreateObject("Cylindre");
-	{
-		auto meshComponent = mesh4->AddComponent<c3d::components::rendering::Mesh>();
-		auto createCylinderComponent = mesh4->AddComponent<CylinderComponent>();
-
-		createCylinderComponent->CreateProceduralMesh(gpu, 2.0f, 0.5f, 360, 180);
-		meshComponent->Asset = createCylinderComponent->GetMyMesh();
-
-		//mesh1Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/DamagedHelmet.glb");
 	}
 
 	auto target = mesh1;

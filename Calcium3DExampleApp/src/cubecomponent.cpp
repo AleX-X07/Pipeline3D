@@ -64,10 +64,10 @@ void CubeComponent::CreateRectangle(float kWIDTH, float kHEIGHT, float kDEPTH, s
 	//Première face
 	std::vector<glm::vec3> posF1 =
 	{
-		{ 0, 0, 0 },
-		{ 0 + kWIDTH, 0, 0 },
-		{ 0 + kWIDTH, 0 + kHEIGHT, 0 },
-		{0 , 0 + kHEIGHT, 0 }
+		{ -kWIDTH/2, -kHEIGHT/2, kDEPTH/2  },
+		{ kWIDTH/2, -kHEIGHT/2, kDEPTH/2  },
+		{ kWIDTH/2, kHEIGHT/2, kDEPTH/2  },
+		{ -kWIDTH/2, kHEIGHT/2, kDEPTH/2  },
 	};
 
 	std::vector<uint32_t> indF1 =
@@ -81,10 +81,10 @@ void CubeComponent::CreateRectangle(float kWIDTH, float kHEIGHT, float kDEPTH, s
 	//Deuxième face
 	std::vector<glm::vec3> posF2 =
 	{
-		{ 0 + kWIDTH, 0, 0 },
-		{ 0 + kWIDTH, 0, 0 + kDEPTH },
-		{ 0 + kWIDTH, 0 + kHEIGHT, 0 + kDEPTH },
-		{ 0 + kWIDTH, 0 + kHEIGHT, 0 }
+		{ kWIDTH / 2, -kHEIGHT / 2, kDEPTH / 2  },
+		{ kWIDTH / 2, -kHEIGHT / 2, -kDEPTH / 2  },
+		{ kWIDTH / 2, kHEIGHT / 2, -kDEPTH / 2  },
+		{ kWIDTH / 2, kHEIGHT / 2, kDEPTH / 2  },
 	};
 
 	std::vector<uint32_t> indF2 =
@@ -98,10 +98,10 @@ void CubeComponent::CreateRectangle(float kWIDTH, float kHEIGHT, float kDEPTH, s
 	//Troisème face
 	std::vector<glm::vec3> posF3 =
 	{
-		{ 0, 0, 0 + kDEPTH },
-		{ 0 + kWIDTH, 0, 0 + kDEPTH },
-		{ 0 + kWIDTH, 0 + kHEIGHT, 0 + kDEPTH},
-		{0 , 0 + kHEIGHT, 0 + kDEPTH}
+		{ kWIDTH / 2, -kHEIGHT / 2, -kDEPTH / 2  },
+		{ -kWIDTH / 2, -kHEIGHT / 2, -kDEPTH / 2  },
+		{ kWIDTH / 2, kHEIGHT / 2, -kDEPTH / 2  },
+		{ -kWIDTH / 2, kHEIGHT / 2, -kDEPTH / 2  },
 	};
 
 	std::vector<uint32_t> indF3 =
@@ -115,10 +115,10 @@ void CubeComponent::CreateRectangle(float kWIDTH, float kHEIGHT, float kDEPTH, s
 	//Quatrième face
 	std::vector<glm::vec3> posF4 =
 	{
-		{ 0 , 0, 0 },
-		{ 0 , 0, 0 + kDEPTH },
-		{ 0 , 0 + kHEIGHT, 0 + kDEPTH },
-		{ 0 , 0 + kHEIGHT, 0 }
+		{ -kWIDTH / 2, -kHEIGHT / 2, -kDEPTH / 2  },
+		{ -kWIDTH / 2, -kHEIGHT / 2, kDEPTH / 2  },
+		{ -kWIDTH / 2, kHEIGHT / 2, kDEPTH / 2  },
+		{ -kWIDTH / 2, kHEIGHT / 2, -kDEPTH / 2  },
 	};
 
 	std::vector<uint32_t> indF4 =
@@ -129,13 +129,13 @@ void CubeComponent::CreateRectangle(float kWIDTH, float kHEIGHT, float kDEPTH, s
 
 	CreateFace(posF4, indF4, positions, normals, indices);
 
-	// Cinquième et dernière face, pas besoin de faire celle de dessous.
+	// Cinquième face
 	std::vector<glm::vec3> posF5 =
 	{
-		{ 0 , 0 + kHEIGHT, 0 },
-		{ 0 + kWIDTH, 0 + kHEIGHT, 0 },
-		{ 0 + kWIDTH, 0 + kHEIGHT, 0 + kDEPTH },
-		{ 0 , 0 + kHEIGHT, 0 + kDEPTH }
+		{ -kWIDTH / 2, kHEIGHT / 2, kDEPTH / 2  },
+		{ kWIDTH / 2, kHEIGHT / 2, kDEPTH / 2  },
+		{ kWIDTH / 2, kHEIGHT / 2, -kDEPTH / 2  },
+		{ -kWIDTH / 2, kHEIGHT / 2, -kDEPTH / 2  },
 	};
 
 	std::vector<uint32_t> indF5 =
@@ -146,6 +146,22 @@ void CubeComponent::CreateRectangle(float kWIDTH, float kHEIGHT, float kDEPTH, s
 	};
 
 	CreateFace(posF5, indF5, positions, normals, indices);
+
+	// Sixième face
+	std::vector<glm::vec3> posF6 =
+	{
+		{ -kWIDTH / 2, -kHEIGHT / 2, -kDEPTH / 2  },
+		{ kWIDTH / 2, -kHEIGHT / 2, -kDEPTH / 2  },
+		{ kWIDTH / 2, -kHEIGHT / 2, kDEPTH / 2  },
+		{ -kWIDTH / 2, -kHEIGHT / 2, kDEPTH / 2  },
+	};
+
+	std::vector<uint32_t> indF6 =
+
+	{
+		20,21,22,
+		20,22,23
+	};
 
 }
 

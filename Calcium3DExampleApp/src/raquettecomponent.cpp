@@ -49,4 +49,5 @@ void RaquetteComponent::Update(float f, float dt, c3d::GameSubsystems& subsystem
 	};
 
 	GetGameObject()->Transform->Position = offset;
+	GetGameObject()->Transform->Orientation = glm::quat({ 0.0f, -angle, 0.0f });
 }
