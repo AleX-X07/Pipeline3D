@@ -35,6 +35,9 @@
     <ClCompile Include="src\raquettecomponent.cpp">
       <Filter>Source Files\Component\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="src\cubecomponent.cpp">
+      <Filter>Source Files\Component\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\examplegame.h">
@@ -44,6 +47,9 @@
       <Filter>Header Files\Component\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="include\raquettecomponent.h">
+      <Filter>Header Files\Component\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cubecomponent.h">
       <Filter>Header Files\Component\Mesh</Filter>
     </ClInclude>
   </ItemGroup>

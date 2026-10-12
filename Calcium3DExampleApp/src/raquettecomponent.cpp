@@ -5,6 +5,7 @@
 
 #include <c3d/game.h>
 #include <c3d/gameobject.h>
+#include "cubecomponent.h"
 
 RaquetteComponent::RaquetteComponent(c3d::GameObject* owner) :
 	c3d::Component(owner)
@@ -20,7 +21,7 @@ RaquetteComponent::RaquetteComponent(ga::core::CttiDeserializer& deserializer) :
 
 void RaquetteComponent::Update(float f, float dt, c3d::GameSubsystems& subsystems)
 {
-	float finalSpeed;
+	/*float finalSpeed;
 
 	bool left = subsystems.platform.Input().IsHeld(ga::platform::EKey::A);
 	bool right = subsystems.platform.Input().IsHeld(ga::platform::EKey::D);
@@ -45,7 +46,7 @@ void RaquetteComponent::Update(float f, float dt, c3d::GameSubsystems& subsystem
 		center.z + glm::sin(dt * speed * glm::pi<float>()) * r
 	};
 
-	GetGameObject()->Transform->Position += offset;
+	GetGameObject()->Transform->Position += offset;*/
 }
 
 void RaquetteComponent::SetVar(float _r, glm::vec3 _center, float _speed)
@@ -54,6 +55,7 @@ void RaquetteComponent::SetVar(float _r, glm::vec3 _center, float _speed)
 	center = _center;
 	speed = _speed;
 }
+
 
 void RaquetteComponent::CreateFace(std::vector<glm::vec3> fPositions, std::vector<uint32_t> fIndices, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<uint32_t>& indices)
 {
@@ -182,6 +184,7 @@ void RaquetteComponent::CreateRectangle(float kWIDTH, float kHEIGHT, float kDEPT
 	};
 
 	std::vector<uint32_t> indF5 =
+
 	{
 		16,17,18,
 		16,18,19
