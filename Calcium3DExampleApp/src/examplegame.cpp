@@ -22,7 +22,7 @@
 #include <spherecomponent.h>
 #include <cubecomponent.h>
 #include <raquettecomponent.h>
-
+#include <cylindercomponent.h>
 #include <print>
 
 ExampleGame::ExampleGame()
@@ -39,7 +39,6 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 
 	auto mesh1 = m_gameScene.CreateObject("BoulePlay");
 	{
-		float posStart = 4.0f;
 		float r = 0.5f;
 
 		auto renderComponent = mesh1->AddComponent<c3d::components::rendering::Mesh>();
@@ -48,7 +47,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		createMeshComponent->CreateProceduralMesh(gpu, 2.0f, r, 360, 180);
 		renderComponent->Asset = createMeshComponent->GetMyMesh();
 
-		mesh1->Transform->Position = { posStart,0.0f + r, 0.0f };
+		mesh1->Transform->Position = { 4.0f ,0.0f + r, 0.0f };
 
 		//mesh1Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/DamagedHelmet.glb");
 	}
@@ -70,7 +69,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		glm::vec3 center = { 0,0,0 };
 		float speed = 1 / 12;
 
-		mesh3->Transform->Position = { 0.0f, 0.0f, 0.0f };
+		mesh3->Transform->Position = { 0.0f, 0.0f, 4.0f };
 
 		auto renderMeshComponent = mesh3->AddComponent<c3d::components::rendering::Mesh>();
 		auto createMeshComponent = mesh3->AddComponent<CubeComponent>();
@@ -78,6 +77,17 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		//createMeshComponent->SetVar(r, center, speed);
 		createMeshComponent->CreateProceduralMesh(gpu, width, height, depth);
 		renderMeshComponent->Asset = createMeshComponent->GetMyMesh();
+	}
+
+	auto mesh4 = m_gameScene.CreateObject("Cylindre");
+	{
+		auto meshComponent = mesh4->AddComponent<c3d::components::rendering::Mesh>();
+		auto createCylinderComponent = mesh4->AddComponent<CylinderComponent>();
+
+		createCylinderComponent->CreateProceduralMesh(gpu, 2.0f, 0.5f, 360, 180);
+		meshComponent->Asset = createCylinderComponent->GetMyMesh();
+
+		//mesh1Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/DamagedHelmet.glb");
 	}
 
 	auto target = mesh1;

@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\cubecomponent.cpp" />
+    <ClCompile Include="src\cylindercomponent.cpp" />
     <ClCompile Include="src\examplegame.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\raquettecomponent.cpp" />
@@ -167,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cubecomponent.h" />
+    <ClInclude Include="include\cylindercomponent.h" />
     <ClInclude Include="include\examplegame.h" />
     <ClInclude Include="include\raquettecomponent.h" />
     <ClInclude Include="include\spherecomponent.h" />

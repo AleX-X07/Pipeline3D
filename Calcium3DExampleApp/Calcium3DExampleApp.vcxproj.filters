@@ -38,6 +38,9 @@
     <ClCompile Include="src\cubecomponent.cpp">
       <Filter>Source Files\Component\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="src\cylindercomponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\examplegame.h">
@@ -51,6 +54,9 @@
     </ClInclude>
     <ClInclude Include="include\cubecomponent.h">
       <Filter>Header Files\Component\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cylindercomponent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
