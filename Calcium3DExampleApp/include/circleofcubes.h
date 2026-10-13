@@ -15,6 +15,8 @@ public:
 	explicit CircleOfCubes(c3d::GameObject* owner);
 	explicit CircleOfCubes(ga::core::CttiDeserializer& deserializer);
 
+	void CreateListeCubeTower(unsigned int nbrCube, glm::vec3 center, float r);
+
 };
 
 #endif
