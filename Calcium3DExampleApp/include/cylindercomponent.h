@@ -13,6 +13,8 @@ class CylinderComponent
 
 	ga::render::Mesh myMesh;
 
+	float r = 0.0f;
+
 public:
 	explicit CylinderComponent(c3d::GameObject* owner);
 	explicit CylinderComponent(ga::core::CttiDeserializer& deserializer);
@@ -21,6 +23,7 @@ public:
 	void CreateProceduralMesh(ga::gpu::Device& gpu, float h, float r, uint32_t numSegments, uint32_t numSlices);
 
 	ga::render::Mesh& GetMyMesh();
+	float& GetRadius();
 };
 
 #endif

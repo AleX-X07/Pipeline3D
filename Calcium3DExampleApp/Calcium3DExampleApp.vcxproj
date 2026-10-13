@@ -164,6 +164,7 @@
     <ClCompile Include="src\examplegame.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\raquettecomponent.cpp" />
+    <ClCompile Include="src\shperebehaviourcomponent.cpp" />
     <ClCompile Include="src\spherecomponent.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +172,7 @@
     <ClInclude Include="include\cylindercomponent.h" />
     <ClInclude Include="include\examplegame.h" />
     <ClInclude Include="include\raquettecomponent.h" />
+    <ClInclude Include="include\spherebehaviourcomponent.h" />
     <ClInclude Include="include\spherecomponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -23,6 +23,8 @@
 #include <cubecomponent.h>
 #include <raquettecomponent.h>
 #include <cylindercomponent.h>
+#include <spherebehaviourcomponent.h>
+
 #include <print>
 
 ExampleGame::ExampleGame()
@@ -47,12 +49,14 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 
 	}
 
-	auto mesh1 = m_gameScene.CreateObject("BoulePlay");
+	auto mesh1 = m_gameScene.CreateObject("Sphere");
 	{
 		float r = 0.5f;
+		float speed = 5.0f;
 
 		auto renderComponent = mesh1->AddComponent<c3d::components::rendering::Mesh>();
 		auto createMeshComponent = mesh1->AddComponent<SphereComponent>();
+		auto behaviour = mesh1->AddComponent<SphereBehaviourComponent>(speed);
 
 		createMeshComponent->CreateProceduralMesh(gpu, 2.0f, r, 360, 180);
 		renderComponent->Asset = createMeshComponent->GetMyMesh();

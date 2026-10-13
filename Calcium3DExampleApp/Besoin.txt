@@ -16,3 +16,16 @@ Programmation :
 - Renvoi de la balle
 - Destruction Bloc
 
+Faire la tour de cylindre entouré de cube :
+
+entrée : nombre de cube - rayon du cylindre
+
+- placer les points sur le cercle.
+- boucler dessus
+	- calculer le scale
+	- placer le centre d'un cube
+	- faire le cube
+
+
+
+

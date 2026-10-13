@@ -63,8 +63,10 @@ void CylinderComponent::CreateCylinder(float h, float r, uint32_t numSegments, u
 	}
 }
 
-void CylinderComponent::CreateProceduralMesh(ga::gpu::Device& gpu, float h, float r, uint32_t numSegments, uint32_t numSlices)
+void CylinderComponent::CreateProceduralMesh(ga::gpu::Device& gpu, float h, float _r, uint32_t numSegments, uint32_t numSlices)
 {
+	r = _r;
+
 	constexpr float kWIDTH = 2.0f;
 	constexpr float kHEIGHT = 2.0f;
 
@@ -98,4 +100,9 @@ void CylinderComponent::CreateProceduralMesh(ga::gpu::Device& gpu, float h, floa
 ga::render::Mesh& CylinderComponent::GetMyMesh() 
 {
 	return myMesh;
+}
+
+float& CylinderComponent::GetRadius() 
+{
+	return r;
 }
