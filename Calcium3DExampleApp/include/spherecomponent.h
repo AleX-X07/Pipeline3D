@@ -6,12 +6,17 @@
 #include <c3d/gamescene.h>
 #include <c3d/component.h>
 
+#include <gallium/platform/input.h>
+#include <gallium/platform/platform.h>
+#include <c3d/gameobject.h>
+
 class SphereComponent
 	: public c3d::Component
 {
 	GA_CTTI_OBJECT(SphereComponent, c3d::Component);
 
 	ga::render::Mesh myMesh;
+	bool isMoving = false;
 
 public:
 	explicit SphereComponent(c3d::GameObject* owner);
