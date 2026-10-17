@@ -1,5 +1,6 @@
 #include <spherecomponent.h>
 
+
 SphereComponent::SphereComponent(c3d::GameObject* owner) : 
 	c3d::Component(owner) 
 {
@@ -101,6 +102,20 @@ void SphereComponent::CreateProceduralMesh(ga::gpu::Device& gpu, float h, float 
 
 void SphereComponent::Update(float t, float dt, c3d::GameSubsystems& subsystems)
 {
+	auto ball = GetGameObject();
+	bool pressBar = subsystems.platform.Input().IsPressed(ga::platform::EKey::Space);
+
+	if (pressBar) {
+		isMoving = true;
+	}
+	
+	if (isMoving)
+	{
+		float speed = 5.0f; 
+		float pos = dt * speed;
+		ball->Transform->Position = ball->Transform->Position() + glm::vec3(0.0f, 0.0f, 1.0f) * pos;
+	}
+
 
 }
 

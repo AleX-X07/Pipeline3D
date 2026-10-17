@@ -21,7 +21,7 @@ RaquetteComponent::RaquetteComponent(ga::core::CttiDeserializer& deserializer) :
 
 void RaquetteComponent::Update(float f, float dt, c3d::GameSubsystems& subsystems)
 {
-	/*float finalSpeed;
+	float finalSpeed;
 
 	bool left = subsystems.platform.Input().IsHeld(ga::platform::EKey::A);
 	bool right = subsystems.platform.Input().IsHeld(ga::platform::EKey::D);
@@ -46,7 +46,7 @@ void RaquetteComponent::Update(float f, float dt, c3d::GameSubsystems& subsystem
 		center.z + glm::sin(dt * speed * glm::pi<float>()) * r
 	};
 
-	GetGameObject()->Transform->Position += offset;*/
+	GetGameObject()->Transform->Position += offset;
 }
 
 void RaquetteComponent::SetVar(float _r, glm::vec3 _center, float _speed)

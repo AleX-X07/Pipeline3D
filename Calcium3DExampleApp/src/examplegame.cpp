@@ -74,7 +74,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		auto renderMeshComponent = mesh3->AddComponent<c3d::components::rendering::Mesh>();
 		auto createMeshComponent = mesh3->AddComponent<CubeComponent>();
 
-		//createMeshComponent->SetVar(r, center, speed);
+		createMeshComponent->SetVar(r, center, speed);
 		createMeshComponent->CreateProceduralMesh(gpu, width, height, depth);
 		renderMeshComponent->Asset = createMeshComponent->GetMyMesh();
 	}
