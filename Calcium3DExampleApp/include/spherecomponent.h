@@ -17,13 +17,15 @@ class SphereComponent
 
 	ga::render::Mesh myMesh;
 	bool isMoving = false;
+	c3d::GameObject* raquette;
+	float radius;
 
 public:
 	explicit SphereComponent(c3d::GameObject* owner);
 	explicit SphereComponent(ga::core::CttiDeserializer& deserializer);
 
 	void CreateSphere(float h, float r, uint32_t numSegments, uint32_t numSlices, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<uint32_t>& indices);
-	void CreateProceduralMesh(ga::gpu::Device& gpu, float h, float r, uint32_t numSegments, uint32_t numSlices);
+	void CreateProceduralMesh(ga::gpu::Device& gpu, float h, float r, uint32_t numSegments, uint32_t numSlices, c3d::GameObject* raquetteGet);
 	
 	virtual void Update(float t, float dt, c3d::GameSubsystems& subsystems) override;
 

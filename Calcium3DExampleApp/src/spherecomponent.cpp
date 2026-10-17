@@ -1,10 +1,13 @@
 #include <spherecomponent.h>
 
 
+
 SphereComponent::SphereComponent(c3d::GameObject* owner) : 
 	c3d::Component(owner) 
 {
-
+	auto ball = GetGameObject();
+	auto collider = ball->AddComponent<c3d::components::physics::SphereCollider>();
+	collider->Radius = radius;
 }
 
 SphereComponent::SphereComponent(ga::core::CttiDeserializer& deserializer) : 
@@ -18,6 +21,8 @@ void SphereComponent::CreateSphere(float h, float r, uint32_t numSegments, uint3
 	size_t numVertices = numSegments * (numSlices + 1);
 	size_t numIndicesPerSlice = 6 * numSegments;
 	size_t numIndices = numIndicesPerSlice * numSlices;
+
+	radius = r;
 
 	positions.resize(numVertices);
 	normals.resize(numVertices);
@@ -68,8 +73,9 @@ void SphereComponent::CreateSphere(float h, float r, uint32_t numSegments, uint3
 	}
 }
 
-void SphereComponent::CreateProceduralMesh(ga::gpu::Device& gpu, float h, float r, uint32_t numSegments, uint32_t numSlices)
+void SphereComponent::CreateProceduralMesh(ga::gpu::Device& gpu, float h, float r, uint32_t numSegments, uint32_t numSlices, c3d::GameObject* raquetteGet)
 {
+	raquette = raquetteGet;
 	constexpr float kWIDTH = 2.0f;
 	constexpr float kHEIGHT = 2.0f;
 
@@ -103,7 +109,9 @@ void SphereComponent::CreateProceduralMesh(ga::gpu::Device& gpu, float h, float 
 void SphereComponent::Update(float t, float dt, c3d::GameSubsystems& subsystems)
 {
 	auto ball = GetGameObject();
+	
 	bool pressBar = subsystems.platform.Input().IsPressed(ga::platform::EKey::Space);
+	float dir = 1.0f;
 
 	if (pressBar) {
 		isMoving = true;
@@ -113,9 +121,10 @@ void SphereComponent::Update(float t, float dt, c3d::GameSubsystems& subsystems)
 	{
 		float speed = 5.0f; 
 		float pos = dt * speed;
-		ball->Transform->Position = ball->Transform->Position() + glm::vec3(0.0f, 0.0f, 1.0f) * pos;
+		ball->Transform->Position = ball->Transform->Position() + glm::vec3(dir, 0.0f, 0.0f) * pos;
 	}
 
+	
 }
 
 ga::render::Mesh& SphereComponent::GetMyMesh()

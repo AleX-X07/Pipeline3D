@@ -2,14 +2,22 @@
 
 #include <gallium/platform/platform.h>
 #include <gallium/platform/input.h>
-
 #include <c3d/game.h>
+#include <c3d/gamescene.h>
+#include <c3d/component.h>
 #include <c3d/gameobject.h>
+
 #include "cubecomponent.h"
 
-RaquetteComponent::RaquetteComponent(c3d::GameObject* owner, float _r, glm::vec3 _center, float _speed) :
+RaquetteComponent::RaquetteComponent(c3d::GameObject* owner, float _r, glm::vec3 _center, float _speed, float _width, float _height, float _depth) :
 	c3d::Component(owner), r(_r), center(_center), speed(_speed)
 {
+	auto raquette = GetGameObject();
+	width = _width;
+	height = _height;
+	depth = _depth;
+	auto collider = raquette->AddComponent<c3d::components::physics::BoxCollider>();
+	collider->Size = { width, height, depth };
 
 }
 
@@ -21,6 +29,7 @@ RaquetteComponent::RaquetteComponent(ga::core::CttiDeserializer& deserializer) :
 
 void RaquetteComponent::Update(float f, float dt, c3d::GameSubsystems& subsystems)
 {
+	
 	float finalSpeed;
 
 	bool left = subsystems.platform.Input().IsHeld(ga::platform::EKey::A);

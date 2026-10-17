@@ -47,29 +47,6 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		meshComponent->Asset = createCylinderComponent->GetMyMesh();
 
 	}
-
-	auto mesh1 = m_gameScene.CreateObject("Sphere");
-	{
-		float r = 0.5f;
-		float speed = 5.0f;
-
-		auto renderComponent = mesh1->AddComponent<c3d::components::rendering::Mesh>();
-		auto createMeshComponent = mesh1->AddComponent<SphereComponent>();
-
-		createMeshComponent->CreateProceduralMesh(gpu, 2.0f, r, 360, 180);
-		renderComponent->Asset = createMeshComponent->GetMyMesh();
-
-		mesh1->Transform->Position = { 4.0f ,0.0f + r, 0.0f };
-
-	}
-
-	auto mesh2 = m_gameScene.CreateObject("Box");
-	{
-		auto mesh2Component = mesh2->AddComponent<c3d::components::rendering::Mesh>();
-		mesh2Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/plane.glb");
-		mesh2->Transform->Position = { 0.0f, 0.0f, 0.0f };
-	}
-
 	auto mesh3 = m_gameScene.CreateObject("Raquette");
 	{
 		float width = 2.0f;
@@ -84,12 +61,35 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 
 		auto renderMeshComponent = mesh3->AddComponent<c3d::components::rendering::Mesh>();
 		auto createMeshComponent = mesh3->AddComponent<CubeComponent>();
-		auto movementComponent = mesh3->AddComponent<RaquetteComponent>(r, center, speed);
+		auto movementComponent = mesh3->AddComponent<RaquetteComponent>(r, center, speed, width, height, depth);
 
 		createMeshComponent->CreateProceduralMesh(gpu, width, height, depth);
 		renderMeshComponent->Asset = createMeshComponent->GetMyMesh();
 	}
 
+	auto mesh1 = m_gameScene.CreateObject("Sphere");
+	{
+		float r = 0.5f;
+		float speed = 5.0f;
+
+		auto renderComponent = mesh1->AddComponent<c3d::components::rendering::Mesh>();
+		auto createMeshComponent = mesh1->AddComponent<SphereComponent>();
+
+		createMeshComponent->CreateProceduralMesh(gpu, 2.0f, r, 360, 180, mesh3);
+		renderComponent->Asset = createMeshComponent->GetMyMesh();
+
+		mesh1->Transform->Position = { 4.0f ,0.0f + r, 0.0f };
+
+	}
+
+	auto mesh2 = m_gameScene.CreateObject("Box");
+	{
+		auto mesh2Component = mesh2->AddComponent<c3d::components::rendering::Mesh>();
+		mesh2Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/plane.glb");
+		mesh2->Transform->Position = { 0.0f, 0.0f, 0.0f };
+	}
+
+	
 	auto target = mesh1;
 
 	auto camera0 = m_gameScene.CreateObject("Camera 0");

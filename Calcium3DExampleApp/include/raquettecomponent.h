@@ -15,10 +15,11 @@ class RaquetteComponent
 	float speed;
 
 	float angle = 0.0f;
+	float width, height, depth;
 
 public:
 
-	explicit RaquetteComponent(c3d::GameObject* owner, float _r, glm::vec3 _center, float _speed);
+	explicit RaquetteComponent(c3d::GameObject* owner, float _r, glm::vec3 _center, float _speed, float _width, float _height, float _depth);
 	explicit RaquetteComponent(ga::core::CttiDeserializer& deserializer);
 
 	virtual void Update(float f, float dt, c3d::GameSubsystems& subsystems) override;
