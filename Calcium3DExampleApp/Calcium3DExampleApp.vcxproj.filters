@@ -41,9 +41,6 @@
     <ClCompile Include="src\raquettecomponent.cpp">
       <Filter>Source Files\Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\shperebehaviourcomponent.cpp">
-      <Filter>Source Files\Component</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\examplegame.h">
@@ -59,9 +56,6 @@
       <Filter>Header Files\Component\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="include\raquettecomponent.h">
-      <Filter>Header Files\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="include\spherebehaviourcomponent.h">
       <Filter>Header Files\Component</Filter>
     </ClInclude>
   </ItemGroup>
