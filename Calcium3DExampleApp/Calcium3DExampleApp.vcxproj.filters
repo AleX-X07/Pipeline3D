@@ -12,14 +12,8 @@
     <Filter Include="Source Files\Component">
       <UniqueIdentifier>{f853b6c7-6a62-417e-9c67-2ea978572104}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Component\Mesh">
-      <UniqueIdentifier>{f19a7fee-7011-4000-ab20-c7a6f8ce4832}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Component">
       <UniqueIdentifier>{c99a3b33-0c2b-4bdc-b382-88a03830f678}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Component\Mesh">
-      <UniqueIdentifier>{bcd2f6ec-68c6-4d3a-a227-0fc593a26f6d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -29,40 +23,40 @@
     <ClCompile Include="src\examplegame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\spherecomponent.cpp">
-      <Filter>Source Files\Component\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\raquettecomponent.cpp">
-      <Filter>Source Files\Component\Mesh</Filter>
+    <ClCompile Include="src\cylindercomponent.cpp">
+      <Filter>Source Files\Component</Filter>
     </ClCompile>
     <ClCompile Include="src\cubecomponent.cpp">
-      <Filter>Source Files\Component\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cylindercomponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Component</Filter>
     </ClCompile>
     <ClCompile Include="src\behaviourtower.cpp">
-      <Filter>Source Files\Component\Mesh</Filter>
+      <Filter>Source Files\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\raquettecomponent.cpp">
+      <Filter>Source Files\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spherecomponent.cpp">
+      <Filter>Source Files\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\examplegame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\spherecomponent.h">
-      <Filter>Header Files\Component\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="include\raquettecomponent.h">
-      <Filter>Header Files\Component\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="include\cubecomponent.h">
-      <Filter>Header Files\Component\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="include\cylindercomponent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Component</Filter>
     </ClInclude>
     <ClInclude Include="include\behaviourtower.h">
-      <Filter>Header Files\Component\Mesh</Filter>
+      <Filter>Header Files\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cubecomponent.h">
+      <Filter>Header Files\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\raquettecomponent.h">
+      <Filter>Header Files\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\spherecomponent.h">
+      <Filter>Header Files\Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
