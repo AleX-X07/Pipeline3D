@@ -26,10 +26,12 @@ public:
 
 	void CreateSphere(float h, float r, uint32_t numSegments, uint32_t numSlices, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<uint32_t>& indices);
 	void CreateProceduralMesh(ga::gpu::Device& gpu, float h, float r, uint32_t numSegments, uint32_t numSlices, c3d::GameObject* raquetteGet);
+	bool OnCollision(glm::vec3 sphereInRaquette, glm::vec3 sizeRaquette, float r);
 	
 	virtual void Update(float t, float dt, c3d::GameSubsystems& subsystems) override;
 
 	ga::render::Mesh& GetMyMesh();
+	float& GetRadius();
 };
 
 #endif

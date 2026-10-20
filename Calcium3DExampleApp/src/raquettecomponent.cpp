@@ -12,12 +12,9 @@
 RaquetteComponent::RaquetteComponent(c3d::GameObject* owner, float _r, glm::vec3 _center, float _speed, float _width, float _height, float _depth) :
 	c3d::Component(owner), r(_r), center(_center), speed(_speed)
 {
-	auto raquette = GetGameObject();
 	width = _width;
 	height = _height;
 	depth = _depth;
-	auto collider = raquette->AddComponent<c3d::components::physics::BoxCollider>();
-	collider->Size = { width, height, depth };
 
 }
 
@@ -59,4 +56,9 @@ void RaquetteComponent::Update(float f, float dt, c3d::GameSubsystems& subsystem
 
 	GetGameObject()->Transform->Position = offset;
 	GetGameObject()->Transform->Orientation = glm::quat({ 0.0f, -angle, 0.0f });
+}
+
+glm::vec3 RaquetteComponent::GetSize()
+{
+	return glm::vec3({width,height,depth});
 }

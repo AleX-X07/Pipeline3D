@@ -101,8 +101,3 @@ ga::render::Mesh& CylinderComponent::GetMyMesh()
 {
 	return myMesh;
 }
-
-float& CylinderComponent::GetRadius() 
-{
-	return r;
-}

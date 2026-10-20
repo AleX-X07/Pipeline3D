@@ -25,6 +25,7 @@
 #include <cylindercomponent.h>
 
 #include <print>
+#include <iostream>
 
 ExampleGame::ExampleGame()
 {
@@ -38,16 +39,16 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	//((c3d::graphics::SplitScreenRenderer*)m_renderer.get())->SetSplitLine(4.0f, { 1.0f, 0.0f, 1.0f });
 	m_renderer = std::make_unique<c3d::graphics::DefaultRenderer>(gpu);
 
-	auto mesh4 = m_gameScene.CreateObject("Cylindre");
+	auto cylindre = m_gameScene.CreateObject("Cylindre");
 	{
-		auto meshComponent = mesh4->AddComponent<c3d::components::rendering::Mesh>();
-		auto createCylinderComponent = mesh4->AddComponent<CylinderComponent>();
+		auto meshComponent = cylindre->AddComponent<c3d::components::rendering::Mesh>();
+		auto createCylinderComponent = cylindre->AddComponent<CylinderComponent>();
 
 		createCylinderComponent->CreateProceduralMesh(gpu, 2.0f, 0.5f, 360, 180);
 		meshComponent->Asset = createCylinderComponent->GetMyMesh();
 
 	}
-	auto mesh3 = m_gameScene.CreateObject("Raquette");
+	auto raquette = m_gameScene.CreateObject("Raquette");
 	{
 		float width = 2.0f;
 		float height = 1.0f;
@@ -57,40 +58,40 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		glm::vec3 center = m_gameScene.GetObject("Cylindre")->Transform->Position;
 		float speed = 5.0f;
 
-		mesh3->Transform->Position = { 0.0f, 0.0f, 4.0f };
+		raquette->Transform->Position = { 0.0f, 0.0f, 4.0f };
 
-		auto renderMeshComponent = mesh3->AddComponent<c3d::components::rendering::Mesh>();
-		auto createMeshComponent = mesh3->AddComponent<CubeComponent>();
-		auto movementComponent = mesh3->AddComponent<RaquetteComponent>(r, center, speed, width, height, depth);
+		auto renderMeshComponent = raquette->AddComponent<c3d::components::rendering::Mesh>();
+		auto createMeshComponent = raquette->AddComponent<CubeComponent>();
+		auto movementComponent = raquette->AddComponent<RaquetteComponent>(r, center, speed, width, height, depth);
 
 		createMeshComponent->CreateProceduralMesh(gpu, width, height, depth);
 		renderMeshComponent->Asset = createMeshComponent->GetMyMesh();
 	}
 
-	auto mesh1 = m_gameScene.CreateObject("Sphere");
+	auto sphere = m_gameScene.CreateObject("Sphere");
 	{
 		float r = 0.5f;
 		float speed = 5.0f;
 
-		auto renderComponent = mesh1->AddComponent<c3d::components::rendering::Mesh>();
-		auto createMeshComponent = mesh1->AddComponent<SphereComponent>();
+		auto renderComponent = sphere->AddComponent<c3d::components::rendering::Mesh>();
+		auto createMeshComponent = sphere->AddComponent<SphereComponent>();
 
-		createMeshComponent->CreateProceduralMesh(gpu, 2.0f, r, 360, 180, mesh3);
+		createMeshComponent->CreateProceduralMesh(gpu, 2.0f, r, 360, 180, raquette);
 		renderComponent->Asset = createMeshComponent->GetMyMesh();
 
-		mesh1->Transform->Position = { 4.0f ,0.0f + r, 0.0f };
+		sphere->Transform->Position = { 4.0f ,0.0f + r, 0.0f };
 
 	}
 
-	auto mesh2 = m_gameScene.CreateObject("Box");
+	auto ground = m_gameScene.CreateObject("Box");
 	{
-		auto mesh2Component = mesh2->AddComponent<c3d::components::rendering::Mesh>();
+		auto mesh2Component = ground->AddComponent<c3d::components::rendering::Mesh>();
 		mesh2Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/plane.glb");
-		mesh2->Transform->Position = { 0.0f, 0.0f, 0.0f };
+		ground->Transform->Position = { 0.0f, 0.0f, 0.0f };
 	}
 
 	
-	auto target = mesh1;
+	auto target = sphere;
 
 	auto camera0 = m_gameScene.CreateObject("Camera 0");
 	{
@@ -176,10 +177,23 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 
 	m_gameScene.Update(subsystems);
 
-	if (subsystems.platform.Input().IsHeld(ga::platform::EMouseButton::Left))
+	/*if (subsystems.platform.Input().IsHeld(ga::platform::EMouseButton::Left))
 	{
 		auto [ro, rd] = camera->GetComponent<c3d::components::rendering::Camera>()->Deproject(subsystems.platform.Input().MousePosition());
 		std::println("ro: ({}, {}, {}) / rd: ({}, {}, {})", ro.x, ro.y, ro.z, rd.x, rd.y, rd.z);
+	}*/
+
+	auto sphere = m_gameScene.GetObject("Sphere");
+	auto sphereComp = sphere->GetComponent<SphereComponent>();
+	
+	auto raquette = m_gameScene.GetObject("Raquette");
+	auto raquetteComp = raquette->GetComponent<RaquetteComponent>();
+
+	auto SphereInRaquette = raquette->Transform->DetransformPoint(sphere->Transform->Position());
+
+	if (sphereComp->OnCollision( SphereInRaquette ,raquetteComp->GetSize(), sphereComp->GetRadius()))
+	{
+		std::cout << "True";
 	}
 }
 

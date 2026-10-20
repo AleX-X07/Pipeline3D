@@ -6,8 +6,6 @@ SphereComponent::SphereComponent(c3d::GameObject* owner) :
 	c3d::Component(owner) 
 {
 	auto ball = GetGameObject();
-	auto collider = ball->AddComponent<c3d::components::physics::SphereCollider>();
-	collider->Radius = radius;
 }
 
 SphereComponent::SphereComponent(ga::core::CttiDeserializer& deserializer) : 
@@ -106,6 +104,14 @@ void SphereComponent::CreateProceduralMesh(ga::gpu::Device& gpu, float h, float 
 	});
 }
 
+bool SphereComponent::OnCollision(glm::vec3 sphereInRaquette, glm::vec3 sizeRaquette, float r)
+{
+	return sphereInRaquette.x < (sizeRaquette.x / 2 + r) &&
+		sphereInRaquette.x > (-sizeRaquette.x / 2 - r) &&
+		sphereInRaquette.y < (sizeRaquette.y / 2 + r) &&
+		sphereInRaquette.y > (-sizeRaquette.y / 2 - r);
+}
+
 void SphereComponent::Update(float t, float dt, c3d::GameSubsystems& subsystems)
 {
 	auto ball = GetGameObject();
@@ -130,4 +136,10 @@ void SphereComponent::Update(float t, float dt, c3d::GameSubsystems& subsystems)
 ga::render::Mesh& SphereComponent::GetMyMesh()
 {
 	return myMesh;
+}
+
+
+float& SphereComponent::GetRadius()
+{
+	return radius;
 }

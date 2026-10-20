@@ -23,6 +23,8 @@ public:
 	explicit RaquetteComponent(ga::core::CttiDeserializer& deserializer);
 
 	virtual void Update(float f, float dt, c3d::GameSubsystems& subsystems) override;
+
+	glm::vec3 GetSize();
 };
 
 #endif
