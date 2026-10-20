@@ -1,0 +1,31 @@
+#ifndef BEHAVIOURTOWER_H
+#define BEHAVIOURTOWER_H
+#pragma once
+
+#include <gallium/gpu/device.h>
+#include <gallium/gpu/commandbuffer.h>
+
+#include <c3d/component.h>
+#include <c3d/gamescene.h>
+
+class BehaviourTower :
+	public c3d::Component
+{
+	GA_CTTI_OBJECT(BehaviourTower, c3d::Component);
+
+	std::vector<std::vector<c3d::GameObject*>> listLine;
+	float hCube = 0.0f;
+
+public:
+	explicit BehaviourTower(c3d::GameObject* owner);
+	explicit BehaviourTower(ga::core::CttiDeserializer& deserializer);
+
+	virtual void Update(float t, float dt, c3d::GameSubsystems& subsystem) override;
+
+	std::vector<c3d::GameObject*> CreateLineOfCubeAroundTower(ga::gpu::Device& gpu, c3d::GameScene& m_gamescene, glm::vec3 centerunsigned, unsigned int nbrCube, float r,  float hCube, float offsetY);
+	void CreateListOfLineAroundTower(float hCylinder, ga::gpu::Device& gpu, c3d::GameScene& m_gamescene, glm::vec3 center, unsigned int nbrCubeStart, float r, float hCube);
+	
+	std::vector<std::vector<c3d::GameObject*>>& GetListCube();
+};
+
+#endif

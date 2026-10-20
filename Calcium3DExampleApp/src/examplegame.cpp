@@ -23,6 +23,7 @@
 #include <cubecomponent.h>
 #include <raquettecomponent.h>
 #include <cylindercomponent.h>
+#include <behaviourtower.h>
 
 #include <print>
 #include <iostream>
@@ -39,13 +40,27 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	//((c3d::graphics::SplitScreenRenderer*)m_renderer.get())->SetSplitLine(4.0f, { 1.0f, 0.0f, 1.0f });
 	m_renderer = std::make_unique<c3d::graphics::DefaultRenderer>(gpu);
 
-	auto cylindre = m_gameScene.CreateObject("Cylindre");
+	auto tower = m_gameScene.CreateObject("Tower");
 	{
-		auto meshComponent = cylindre->AddComponent<c3d::components::rendering::Mesh>();
-		auto createCylinderComponent = cylindre->AddComponent<CylinderComponent>();
+		// Creating tower
+		auto meshComponent = tower->AddComponent<c3d::components::rendering::Mesh>();
+		auto createCylinderComponent = tower->AddComponent<CylinderComponent>();
 
-		createCylinderComponent->CreateProceduralMesh(gpu, 2.0f, 0.5f, 360, 180);
+		float hauteur = 5.0f;
+		float rayon = 1.0f;
+
+		createCylinderComponent->CreateProceduralMesh(gpu, hauteur, rayon, 360, 180);
 		meshComponent->Asset = createCylinderComponent->GetMyMesh();
+
+		// Behaviour
+		auto behaviour = tower->AddComponent<BehaviourTower>();
+
+		tower->Transform->Position->y = hauteur / 2.0f;
+
+		auto posCylinder = tower->Transform->Position;
+		float hauteurCube = 0.5f;
+
+		behaviour->CreateListOfLineAroundTower(hauteur, gpu, m_gameScene, posCylinder, 4, rayon, hauteurCube);
 
 	}
 	auto raquette = m_gameScene.CreateObject("Raquette");
@@ -54,11 +69,9 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		float height = 1.0f;
 		float depth = 2.0f;
 
-		float r = 5.0f;
-		glm::vec3 center = m_gameScene.GetObject("Cylindre")->Transform->Position;
+		float r = 10.0f;
+		glm::vec3 center = m_gameScene.GetObject("Tower")->Transform->Position;
 		float speed = 5.0f;
-
-		raquette->Transform->Position = { 0.0f, 0.0f, 4.0f };
 
 		auto renderMeshComponent = raquette->AddComponent<c3d::components::rendering::Mesh>();
 		auto createMeshComponent = raquette->AddComponent<CubeComponent>();
@@ -66,11 +79,13 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 
 		createMeshComponent->CreateProceduralMesh(gpu, width, height, depth);
 		renderMeshComponent->Asset = createMeshComponent->GetMyMesh();
+
+		//raquette->Transform->Position = { 0.0f, 0.0f, 4.0f };
 	}
 
 	auto sphere = m_gameScene.CreateObject("Sphere");
 	{
-		float r = 0.5f;
+		float r = 0.25f;
 		float speed = 5.0f;
 
 		auto renderComponent = sphere->AddComponent<c3d::components::rendering::Mesh>();
@@ -79,19 +94,21 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		createMeshComponent->CreateProceduralMesh(gpu, 2.0f, r, 360, 180, raquette);
 		renderComponent->Asset = createMeshComponent->GetMyMesh();
 
-		sphere->Transform->Position = { 4.0f ,0.0f + r, 0.0f };
+		sphere->Transform->Position = { 3.0f ,0.0f + r, 0.0f };
 
 	}
 
-	auto ground = m_gameScene.CreateObject("Box");
+	auto ground = m_gameScene.CreateObject("Ground");
 	{
 		auto mesh2Component = ground->AddComponent<c3d::components::rendering::Mesh>();
-		mesh2Component->Asset = ga::assets::AssetManager::Global().Load<ga::render::Mesh>("/assets/plane.glb");
-		ground->Transform->Position = { 0.0f, 0.0f, 0.0f };
+		auto cube = ground->AddComponent<CubeComponent>();
+		cube->CreateProceduralMesh(gpu, 50.0f, 0.50f, 50.0f);
+		mesh2Component->Asset = cube->GetMyMesh();
+		ground->Transform->Position = { 0.0f, -0.25f, 0.0f };
 	}
 
 	
-	auto target = sphere;
+	auto target = tower;
 
 	auto camera0 = m_gameScene.CreateObject("Camera 0");
 	{
@@ -127,9 +144,9 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	{
 		auto lightComp = light1->AddComponent<c3d::components::rendering::Light>();
 		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
-		lightComp->Intensity = 20.0f;
+		lightComp->Intensity = 40.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
-		lightComp->SpotAngles = { 12.0f, 15.0f };
+		lightComp->SpotAngles = { 30.0f, 30.0f };
 		light1->Transform->Position = { -3.0f, 3.0f, -3.0f };
 
 		auto lookAtComponent = light1->AddComponent<c3d::components::other::LookAt>();
@@ -140,9 +157,9 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	{
 		auto lightComp = light2->AddComponent<c3d::components::rendering::Light>();
 		lightComp->Color = glm::vec3(0.4f, 0.6f, 1.0f);
-		lightComp->Intensity = 20.0f;
+		lightComp->Intensity = 40.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
-		lightComp->SpotAngles = { 12.0f, 15.0f };
+		lightComp->SpotAngles = { 30.0f, 30.0f };
 		light2->Transform->Position = { -3.0f, 3.0f, 3.0f };
 
 		auto lookAtComponent = light2->AddComponent<c3d::components::other::LookAt>();
@@ -165,6 +182,7 @@ void ExampleGame::Deinitialize()
 
 void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 {
+	// Camera
 	auto camera = m_gameScene.GetObject("Camera 0");
 
 	glm::vec3 offset = dt * 10.0f * glm::vec3(
@@ -177,12 +195,8 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 
 	m_gameScene.Update(subsystems);
 
-	/*if (subsystems.platform.Input().IsHeld(ga::platform::EMouseButton::Left))
-	{
-		auto [ro, rd] = camera->GetComponent<c3d::components::rendering::Camera>()->Deproject(subsystems.platform.Input().MousePosition());
-		std::println("ro: ({}, {}, {}) / rd: ({}, {}, {})", ro.x, ro.y, ro.z, rd.x, rd.y, rd.z);
-	}*/
 
+	// Collision avec la raquette
 	auto sphere = m_gameScene.GetObject("Sphere");
 	auto sphereComp = sphere->GetComponent<SphereComponent>();
 	
@@ -191,7 +205,7 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 
 	auto SphereInRaquette = raquette->Transform->DetransformPoint(sphere->Transform->Position());
 
-	if (sphereComp->OnCollision( SphereInRaquette ,raquetteComp->GetSize(), sphereComp->GetRadius()))
+	if (sphereComp->OnCollision(SphereInRaquette ,raquetteComp->GetSize(), sphereComp->GetRadius()))
 	{
 		std::cout << "True";
 	}

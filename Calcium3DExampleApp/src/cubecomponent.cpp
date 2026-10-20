@@ -100,8 +100,8 @@ void CubeComponent::CreateRectangle(float kWIDTH, float kHEIGHT, float kDEPTH, s
 	{
 		{ kWIDTH / 2, -kHEIGHT / 2, -kDEPTH / 2  },
 		{ -kWIDTH / 2, -kHEIGHT / 2, -kDEPTH / 2  },
-		{ kWIDTH / 2, kHEIGHT / 2, -kDEPTH / 2  },
 		{ -kWIDTH / 2, kHEIGHT / 2, -kDEPTH / 2  },
+		{ kWIDTH / 2, kHEIGHT / 2, -kDEPTH / 2  },
 	};
 
 	std::vector<uint32_t> indF3 =
@@ -163,6 +163,7 @@ void CubeComponent::CreateRectangle(float kWIDTH, float kHEIGHT, float kDEPTH, s
 		20,22,23
 	};
 
+	CreateFace(posF6, indF6, positions, normals, indices);
 }
 
 void CubeComponent::CreateProceduralMesh(ga::gpu::Device& gpu, float kWIDTH, float kHEIGHT, float kDEPTH)

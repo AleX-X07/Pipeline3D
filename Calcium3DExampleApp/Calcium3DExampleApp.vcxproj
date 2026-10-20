@@ -159,6 +159,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\behaviourtower.cpp" />
     <ClCompile Include="src\cubecomponent.cpp" />
     <ClCompile Include="src\cylindercomponent.cpp" />
     <ClCompile Include="src\examplegame.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="src\spherecomponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\behaviourtower.h" />
     <ClInclude Include="include\cubecomponent.h" />
     <ClInclude Include="include\cylindercomponent.h" />
     <ClInclude Include="include\examplegame.h" />

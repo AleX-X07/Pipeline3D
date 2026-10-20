@@ -1,5 +1,5 @@
 #include <spherecomponent.h>
-
+#include <iostream>
 
 
 SphereComponent::SphereComponent(c3d::GameObject* owner) : 
@@ -108,8 +108,8 @@ bool SphereComponent::OnCollision(glm::vec3 sphereInRaquette, glm::vec3 sizeRaqu
 {
 	return sphereInRaquette.x < (sizeRaquette.x / 2 + r) &&
 		sphereInRaquette.x > (-sizeRaquette.x / 2 - r) &&
-		sphereInRaquette.y < (sizeRaquette.y / 2 + r) &&
-		sphereInRaquette.y > (-sizeRaquette.y / 2 - r);
+		sphereInRaquette.z < (sizeRaquette.z / 2 + r) &&
+		sphereInRaquette.z > (-sizeRaquette.z / 2 - r);
 }
 
 void SphereComponent::Update(float t, float dt, c3d::GameSubsystems& subsystems)
