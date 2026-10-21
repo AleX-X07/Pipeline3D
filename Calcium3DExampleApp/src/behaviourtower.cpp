@@ -8,6 +8,7 @@
 #include <c3d/components/rendering/mesh.h>
 
 #include <cubecomponent.h>
+#include <spherecomponent.h>
 
 BehaviourTower::BehaviourTower(c3d::GameObject* owner) :
 	Component(owner)
@@ -19,38 +20,6 @@ BehaviourTower::BehaviourTower(ga::core::CttiDeserializer& deserializer) :
 	Component(deserializer)
 {
 
-}
-
-void BehaviourTower::Update(float t, float dt, c3d::GameSubsystems& subsystem)
-{
-	if(listLine.size() > 1) 
-	{
-		bool needToMoveLine = false;
-		int X = 0;
-		int toErase = 0;
-		for (auto& vec : listLine)
-		{
-			X++;
-			if (vec.empty())
-			{
-				toErase = X;
-				needToMoveLine = true;
-			}
-		}
-		if (needToMoveLine)
-		{
-			listLine.erase(listLine.begin() + toErase);
-			for (auto& vec : listLine)
-			{
-				for (auto& cube : vec)
-				{
-					auto pos = cube->Transform->Position;
-					pos->y -= hCube;
-				}
-			}
-			needToMoveLine = false;
-		}
-	}
 }
 
 std::vector<c3d::GameObject*> BehaviourTower::CreateLineOfCubeAroundTower(ga::gpu::Device& gpu, c3d::GameScene& m_gamescene, glm::vec3 center, unsigned int nbrCube,  float r,  float hCube, float offsetY)
@@ -90,6 +59,17 @@ std::vector<c3d::GameObject*> BehaviourTower::CreateLineOfCubeAroundTower(ga::gp
 	return listCubeByLine;
 }
 
+void BehaviourTower::MoveDownLine()
+{
+	for (auto& vec : listLine)
+	{
+		for (auto& obj : vec)
+		{
+			obj->Transform->Position->y -= hCube;
+		}
+	}
+}
+
 void BehaviourTower::CreateListOfLineAroundTower(float hCylinder, ga::gpu::Device& gpu, c3d::GameScene& m_gamescene, glm::vec3 center, unsigned int nbrCubeStart, float r, float _hCube)
 {
 	
@@ -108,7 +88,39 @@ void BehaviourTower::CreateListOfLineAroundTower(float hCylinder, ga::gpu::Devic
 	}
 }
 
-std::vector<std::vector<c3d::GameObject*>>& BehaviourTower::GetListCube()
+void BehaviourTower::DestroyBloc(c3d::GameScene& m_gameScene, c3d::GameObject* sphere)
 {
-	return listLine;
+	auto tower = this->GetGameObject();
+	auto behaviour = tower->GetComponent<BehaviourTower>();
+
+	auto sphereComp = sphere->GetComponent<SphereComponent>();
+
+	auto vec = behaviour->listLine[currentLine];
+	auto toErase = vec.begin();
+
+	for (auto it = vec.begin(); it != vec.end(); it++)
+	{
+		auto b = vec[it - vec.begin()];
+		auto SphereInB = b->Transform->DetransformPoint(sphere->Transform->Position());
+		auto bComp = b->GetComponent<CubeComponent>();
+
+		if (sphereComp->OnCollision(SphereInB, bComp->GetSize(), sphereComp->GetRadius()) && collide == false)
+		{
+			collide = true;
+			m_gameScene.RemoveObject(b);
+			b->RemoveComponent<c3d::components::rendering::Mesh>();
+			toErase = it;
+		}
+		else 
+		{
+			collide = false;
+		}
+	}
+	vec.erase(toErase);
+	if (vec.empty())
+	{
+		currentLine++;
+		MoveDownLine();
+	}
 }
+

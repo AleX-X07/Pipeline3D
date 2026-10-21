@@ -106,7 +106,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		ground->Transform->Position = { 0.0f, -0.25f, 0.0f };
 	}
 
-	
+	// Target de la camera
 	auto target = tower;
 
 	auto camera0 = m_gameScene.CreateObject("Camera 0");
@@ -214,21 +214,7 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 	auto tower = m_gameScene.GetObject("Tower");
 	auto behaviour = tower->GetComponent<BehaviourTower>();
 
-	c3d::GameObject* toDelete = nullptr;
-
-	auto vec = behaviour->GetListCube()[0];
-
-	for (auto& b : vec)
-	{
-		auto SphereInB = b->Transform->DetransformPoint(sphere->Transform->Position());
-		auto bComp = b->GetComponent<CubeComponent>();
-
-		if (sphereComp->OnCollision(SphereInB, bComp->GetSize(), sphereComp->GetRadius()))
-		{
-			m_gameScene.RemoveObject(b);
-			b->RemoveComponent<c3d::components::rendering::Mesh>();
-		}
-	}
+	behaviour->DestroyBloc(m_gameScene, sphere);
 }
 
 std::vector<ga::gpu::SemaphoreId> ExampleGame::Render(c3d::GameSubsystems& subsystems, ga::gpu::Image& frameImage, const ga::gpu::CommandEncoder& encoder)
@@ -240,5 +226,4 @@ std::vector<ga::gpu::SemaphoreId> ExampleGame::Render(c3d::GameSubsystems& subsy
 void ExampleGame::RenderUi()
 {
 	m_gameScene.RenderUi();
-
 }
