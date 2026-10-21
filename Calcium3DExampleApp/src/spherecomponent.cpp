@@ -117,7 +117,7 @@ void SphereComponent::Update(float t, float dt, c3d::GameSubsystems& subsystems)
 	auto ball = GetGameObject();
 	
 	bool pressBar = subsystems.platform.Input().IsPressed(ga::platform::EKey::Space);
-	float dir = 1.0f;
+	float dir = -1.0f;
 
 	if (pressBar) {
 		isMoving = true;
@@ -125,12 +125,10 @@ void SphereComponent::Update(float t, float dt, c3d::GameSubsystems& subsystems)
 	
 	if (isMoving)
 	{
-		float speed = 5.0f; 
+		float speed = 5.0f;
 		float pos = dt * speed;
 		ball->Transform->Position = ball->Transform->Position() + glm::vec3(dir, 0.0f, 0.0f) * pos;
 	}
-
-	
 }
 
 ga::render::Mesh& SphereComponent::GetMyMesh()

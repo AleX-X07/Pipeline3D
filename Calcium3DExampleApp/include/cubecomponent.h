@@ -14,6 +14,7 @@ class CubeComponent
 
 	glm::vec3 center = { 0,0,0 };
 	float speed = 0.1f;
+	glm::vec3 size = { 0,0,0 };
 
 public:
 
@@ -25,5 +26,6 @@ public:
 	void CreateProceduralMesh(ga::gpu::Device& gpu, float kWIDTH, float kHEIGHT, float kDEPTH);
 
 	ga::render::Mesh& GetMyMesh();
+	glm::vec3& GetSize();
 };
 #endif

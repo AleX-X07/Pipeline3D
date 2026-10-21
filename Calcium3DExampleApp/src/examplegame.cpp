@@ -27,6 +27,7 @@
 
 #include <print>
 #include <iostream>
+#include <vector>
 
 ExampleGame::ExampleGame()
 {
@@ -75,12 +76,10 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 
 		auto renderMeshComponent = raquette->AddComponent<c3d::components::rendering::Mesh>();
 		auto createMeshComponent = raquette->AddComponent<CubeComponent>();
-		auto movementComponent = raquette->AddComponent<RaquetteComponent>(r, center, speed, width, height, depth);
+		auto movementComponent = raquette->AddComponent<RaquetteComponent>(r, center, speed);
 
 		createMeshComponent->CreateProceduralMesh(gpu, width, height, depth);
 		renderMeshComponent->Asset = createMeshComponent->GetMyMesh();
-
-		//raquette->Transform->Position = { 0.0f, 0.0f, 4.0f };
 	}
 
 	auto sphere = m_gameScene.CreateObject("Sphere");
@@ -151,6 +150,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 
 		auto lookAtComponent = light1->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = target;
+
 	}
 
 	auto light2 = m_gameScene.CreateObject("Light2");
@@ -199,15 +199,35 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 	// Collision avec la raquette
 	auto sphere = m_gameScene.GetObject("Sphere");
 	auto sphereComp = sphere->GetComponent<SphereComponent>();
-	
+
 	auto raquette = m_gameScene.GetObject("Raquette");
-	auto raquetteComp = raquette->GetComponent<RaquetteComponent>();
+	auto cubeComp = raquette->GetComponent<CubeComponent>();
 
 	auto SphereInRaquette = raquette->Transform->DetransformPoint(sphere->Transform->Position());
 
-	if (sphereComp->OnCollision(SphereInRaquette ,raquetteComp->GetSize(), sphereComp->GetRadius()))
+	if (sphereComp->OnCollision(SphereInRaquette, cubeComp->GetSize(), sphereComp->GetRadius()))
 	{
 		std::cout << "True";
+	}
+
+	// Destruction des bloc
+	auto tower = m_gameScene.GetObject("Tower");
+	auto behaviour = tower->GetComponent<BehaviourTower>();
+
+	c3d::GameObject* toDelete = nullptr;
+
+	auto vec = behaviour->GetListCube()[0];
+
+	for (auto& b : vec)
+	{
+		auto SphereInB = b->Transform->DetransformPoint(sphere->Transform->Position());
+		auto bComp = b->GetComponent<CubeComponent>();
+
+		if (sphereComp->OnCollision(SphereInB, bComp->GetSize(), sphereComp->GetRadius()))
+		{
+			m_gameScene.RemoveObject(b);
+			b->RemoveComponent<c3d::components::rendering::Mesh>();
+		}
 	}
 }
 
@@ -220,4 +240,5 @@ std::vector<ga::gpu::SemaphoreId> ExampleGame::Render(c3d::GameSubsystems& subsy
 void ExampleGame::RenderUi()
 {
 	m_gameScene.RenderUi();
+
 }

@@ -60,6 +60,9 @@ void CubeComponent::CreateFace(std::vector<glm::vec3> fPositions, std::vector<ui
 
 void CubeComponent::CreateRectangle(float kWIDTH, float kHEIGHT, float kDEPTH, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<uint32_t>& indices)
 {
+	size.x = kWIDTH;
+	size.y = kHEIGHT;
+	size.z = kDEPTH;
 
 	//Première face
 	std::vector<glm::vec3> posF1 =
@@ -198,4 +201,9 @@ void CubeComponent::CreateProceduralMesh(ga::gpu::Device& gpu, float kWIDTH, flo
 ga::render::Mesh& CubeComponent::GetMyMesh()
 {
 	return myMesh;
+}
+
+glm::vec3& CubeComponent::GetSize()
+{
+	return size;
 }
