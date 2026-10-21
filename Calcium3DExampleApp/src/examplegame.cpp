@@ -72,7 +72,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 
 		float r = 10.0f;
 		glm::vec3 center = m_gameScene.GetObject("Tower")->Transform->Position;
-		float speed = 5.0f;
+		float speed = 0.3f;
 
 		auto renderMeshComponent = raquette->AddComponent<c3d::components::rendering::Mesh>();
 		auto createMeshComponent = raquette->AddComponent<CubeComponent>();
@@ -185,13 +185,13 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 	// Camera
 	auto camera = m_gameScene.GetObject("Camera 0");
 
-	glm::vec3 offset = dt * 10.0f * glm::vec3(
+	/*glm::vec3 offset = dt * 10.0f * glm::vec3(
 		subsystems.platform.Input().IsHeld(ga::platform::EKey::Left) ? -1.0f : (subsystems.platform.Input().IsHeld(ga::platform::EKey::Right) ? 1.0f : 0.0f),
 		subsystems.platform.Input().IsHeld(ga::platform::EKey::P) ? -1.0f : (subsystems.platform.Input().IsHeld(ga::platform::EKey::M) ? 1.0f : 0.0f),
 		subsystems.platform.Input().IsHeld(ga::platform::EKey::Up) ? -1.0f : (subsystems.platform.Input().IsHeld(ga::platform::EKey::Down) ? 1.0f : 0.0f)
 	);
 
-	camera->Transform->Position = camera->Transform->Position() + offset;
+	camera->Transform->Position = camera->Transform->Position() + offset;*/
 
 	m_gameScene.Update(subsystems);
 
@@ -205,16 +205,21 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 
 	auto SphereInRaquette = raquette->Transform->DetransformPoint(sphere->Transform->Position());
 
-	if (sphereComp->OnCollision(SphereInRaquette, cubeComp->GetSize(), sphereComp->GetRadius()))
-	{
-		std::cout << "True";
-	}
+	bool touchingRaquette = sphereComp->OnCollision(SphereInRaquette, cubeComp->GetSize(), sphereComp->GetRadius());
+	sphereComp->HandleCollision(touchingRaquette);
 
 	// Destruction des bloc
 	auto tower = m_gameScene.GetObject("Tower");
 	auto behaviour = tower->GetComponent<BehaviourTower>();
 
+	auto towerComp = tower->GetComponent<CylinderComponent>();
+	bool touchingTower = sphereComp->OnCylinderCollision(tower->Transform->Position(), towerComp->GetRadius());
+	sphereComp->HandleCylinderCollision(touchingTower);
+
 	behaviour->DestroyBloc(m_gameScene, sphere);
+
+	glm::vec3 raquettePos = raquette->Transform->Position();
+	camera->Transform->Position = raquettePos * 1.9f + glm::vec3(0.0f, 1.2f, 0.0f);
 }
 
 std::vector<ga::gpu::SemaphoreId> ExampleGame::Render(c3d::GameSubsystems& subsystems, ga::gpu::Image& frameImage, const ga::gpu::CommandEncoder& encoder)

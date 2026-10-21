@@ -112,22 +112,52 @@ bool SphereComponent::OnCollision(glm::vec3 sphereInRaquette, glm::vec3 sizeRaqu
 		sphereInRaquette.z > (-sizeRaquette.z / 2 - r);
 }
 
+void SphereComponent::HandleCollision(bool isColliding)
+{
+	if (isColliding && !wasCollidingRaquette)
+	{
+		direction = -direction;
+	}
+
+	wasCollidingRaquette = isColliding;
+}
+
+bool SphereComponent::OnCylinderCollision(glm::vec3 towerPos, float towerRadius)
+{
+	glm::vec3 ballPos = GetGameObject()->Transform->Position();
+
+	float dx = ballPos.x - towerPos.x;
+	float dz = ballPos.z - towerPos.z;
+	float limit = towerRadius + radius;
+
+	return dx * dx + dz * dz < limit * limit;
+}
+
+void SphereComponent::HandleCylinderCollision(bool isColliding)
+{
+	if (isColliding && !wasCollidingCylinder)
+	{
+		direction = -direction;
+	}
+
+	wasCollidingCylinder = isColliding;
+}
+
 void SphereComponent::Update(float t, float dt, c3d::GameSubsystems& subsystems)
 {
 	auto ball = GetGameObject();
-	
+
 	bool pressBar = subsystems.platform.Input().IsPressed(ga::platform::EKey::Space);
-	float dir = -1.0f;
 
 	if (pressBar) {
 		isMoving = true;
 	}
-	
+
 	if (isMoving)
 	{
 		float speed = 5.0f;
 		float pos = dt * speed;
-		ball->Transform->Position = ball->Transform->Position() + glm::vec3(dir, 0.0f, 0.0f) * pos;
+		ball->Transform->Position = ball->Transform->Position() + direction * pos;
 	}
 }
 

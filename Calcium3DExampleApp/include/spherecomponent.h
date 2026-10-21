@@ -19,6 +19,9 @@ class SphereComponent
 	bool isMoving = false;
 	c3d::GameObject* raquette;
 	float radius;
+	glm::vec3 direction = { 1.0f, 0.0f, 0.0f };  
+	bool wasCollidingRaquette = false;
+	bool wasCollidingCylinder = false;
 
 public:
 	explicit SphereComponent(c3d::GameObject* owner);
@@ -27,6 +30,9 @@ public:
 	void CreateSphere(float h, float r, uint32_t numSegments, uint32_t numSlices, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<uint32_t>& indices);
 	void CreateProceduralMesh(ga::gpu::Device& gpu, float h, float r, uint32_t numSegments, uint32_t numSlices, c3d::GameObject* raquetteGet);
 	bool OnCollision(glm::vec3 sphereInRaquette, glm::vec3 sizeRaquette, float r);
+	void HandleCollision(bool isColliding);
+	bool OnCylinderCollision(glm::vec3 towerPos, float towerRadius);
+	void HandleCylinderCollision(bool isColliding);
 	
 	virtual void Update(float t, float dt, c3d::GameSubsystems& subsystems) override;
 
