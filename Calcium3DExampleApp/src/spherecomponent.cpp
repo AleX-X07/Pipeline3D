@@ -151,10 +151,10 @@ void SphereComponent::HandleCylinderCollision(bool isColliding, c3d::GameObject*
 		auto towerCenter = tower->Transform->Position();
 		auto sphereCenter = GetGameObject()->Transform->Position();
 
-		direction = -glm::normalize(glm::vec3{
-			towerCenter.x - sphereCenter.x,
+		direction = glm::normalize(glm::vec3{
+			sphereCenter.x - towerCenter.x,
 			0.0f,
-			towerCenter.z - sphereCenter.z
+			sphereCenter.z - towerCenter.z
 		});
 
 		auto test = 0.0f;
