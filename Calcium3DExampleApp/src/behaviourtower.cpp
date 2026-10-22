@@ -9,6 +9,7 @@
 
 #include <cubecomponent.h>
 #include <spherecomponent.h>
+#include <iostream>
 
 BehaviourTower::BehaviourTower(c3d::GameObject* owner) :
 	Component(owner)
@@ -95,8 +96,9 @@ void BehaviourTower::DestroyBloc(c3d::GameScene& m_gameScene, c3d::GameObject* s
 
 	auto sphereComp = sphere->GetComponent<SphereComponent>();
 
-	auto vec = behaviour->listLine[currentLine];
+	std::vector<c3d::GameObject*>& vec = behaviour->listLine[currentLine];
 	auto toErase = vec.begin();
+	bool needToErase = false;
 
 	for (auto it = vec.begin(); it != vec.end(); it++)
 	{
@@ -110,14 +112,26 @@ void BehaviourTower::DestroyBloc(c3d::GameScene& m_gameScene, c3d::GameObject* s
 			m_gameScene.RemoveObject(b);
 			b->RemoveComponent<c3d::components::rendering::Mesh>();
 			toErase = it;
+			needToErase = true;
 		}
 		else 
 		{
 			collide = false;
 		}
 	}
-	vec.erase(toErase);
-	if (vec.empty())
+	if (needToErase)
+	{
+		vec.erase(toErase);
+		needToErase = false;
+	}
+
+	auto raquette = m_gameScene.GetObject("Raquette");
+
+	auto SphereInRaquette = raquette->Transform->DetransformPoint(sphere->Transform->Position());
+
+	auto cubeComp = raquette->GetComponent<CubeComponent>();
+
+ 	if (vec.empty() && sphereComp->OnCollisionCube(SphereInRaquette, cubeComp->GetSize(), sphereComp->GetRadius()))
 	{
 		currentLine++;
 		MoveDownLine();
