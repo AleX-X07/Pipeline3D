@@ -14,9 +14,9 @@ class RaquetteComponent
 	glm::vec3 center;
 	float speed;
 
-	float angle = 0.0f;
 
 public:
+	float angle = 0.0f;
 
 	explicit RaquetteComponent(c3d::GameObject* owner, float _r, glm::vec3 _center, float _speed);
 	explicit RaquetteComponent(ga::core::CttiDeserializer& deserializer);

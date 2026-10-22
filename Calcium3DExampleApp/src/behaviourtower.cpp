@@ -104,7 +104,7 @@ void BehaviourTower::DestroyBloc(c3d::GameScene& m_gameScene, c3d::GameObject* s
 		auto SphereInB = b->Transform->DetransformPoint(sphere->Transform->Position());
 		auto bComp = b->GetComponent<CubeComponent>();
 
-		if (sphereComp->OnCollision(SphereInB, bComp->GetSize(), sphereComp->GetRadius()) && collide == false)
+		if (sphereComp->OnCollisionCube(SphereInB, bComp->GetSize(), sphereComp->GetRadius()) && collide == false)
 		{
 			collide = true;
 			m_gameScene.RemoveObject(b);

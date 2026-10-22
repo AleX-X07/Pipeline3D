@@ -26,8 +26,8 @@ void RaquetteComponent::Update(float f, float dt, c3d::GameSubsystems& subsystem
 	
 	float finalSpeed;
 
-	bool left = subsystems.platform.Input().IsHeld(ga::platform::EKey::A);
-	bool right = subsystems.platform.Input().IsHeld(ga::platform::EKey::D);
+	bool left = subsystems.platform.Input().IsHeld(ga::platform::EKey::D);
+	bool right = subsystems.platform.Input().IsHeld(ga::platform::EKey::A);
 
 	if (left) 
 	{

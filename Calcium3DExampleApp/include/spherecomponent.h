@@ -15,24 +15,30 @@ class SphereComponent
 {
 	GA_CTTI_OBJECT(SphereComponent, c3d::Component);
 
+	float speed = 1.0f;
+
 	ga::render::Mesh myMesh;
 	bool isMoving = false;
+
 	c3d::GameObject* raquette;
+
 	float radius;
 	glm::vec3 direction = { 1.0f, 0.0f, 0.0f };  
-	bool wasCollidingRaquette = false;
-	bool wasCollidingCylinder = false;
 
 public:
-	explicit SphereComponent(c3d::GameObject* owner);
+	explicit SphereComponent(c3d::GameObject* owner, float _speed);
 	explicit SphereComponent(ga::core::CttiDeserializer& deserializer);
 
+	// Mesh
 	void CreateSphere(float h, float r, uint32_t numSegments, uint32_t numSlices, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<uint32_t>& indices);
 	void CreateProceduralMesh(ga::gpu::Device& gpu, float h, float r, uint32_t numSegments, uint32_t numSlices, c3d::GameObject* raquetteGet);
-	bool OnCollision(glm::vec3 sphereInRaquette, glm::vec3 sizeRaquette, float r);
-	void HandleCollision(bool isColliding);
-	bool OnCylinderCollision(glm::vec3 towerPos, float towerRadius);
-	void HandleCylinderCollision(bool isColliding);
+	
+	// Behaviour
+	bool OnCollisionCube(glm::vec3 sphereInRaquette, glm::vec3 sizeRaquette, float r);
+	bool OnCollisionCylinder(glm::vec3 posSphere, glm::vec3 posCylinder, float radiusSphere, float radiusCylinder);
+
+	void HandleRaquetteCollision(bool isColliding);
+	void HandleCylinderCollision(bool isColliding, c3d::GameObject* tower);
 	
 	virtual void Update(float t, float dt, c3d::GameSubsystems& subsystems) override;
 
