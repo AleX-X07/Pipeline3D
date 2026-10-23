@@ -37,8 +37,6 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 {
 	Game::Initialize(platform, gpu);
 
-	//m_renderer = std::make_unique<c3d::graphics::SplitScreenRenderer>(gpu, c3d::graphics::EScreenSplitDirection::Vertical);
-	//((c3d::graphics::SplitScreenRenderer*)m_renderer.get())->SetSplitLine(4.0f, { 1.0f, 0.0f, 1.0f });
 	m_renderer = std::make_unique<c3d::graphics::DefaultRenderer>(gpu);
 
 	auto tower = m_gameScene.CreateObject("Tower");
@@ -108,23 +106,12 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	{
 		auto cameraComponent = camera0->AddComponent<c3d::components::rendering::Camera>();
 		cameraComponent->RendererIndex = 0u;
-		//cameraComponent->StretchFactor = 0.5f;
 		auto lookAtComponent = camera0->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = target;
 		camera0->Transform->Position = { 0.0f, 1.0f, 5.0f };
 
 		auto listenerComponent = camera0->AddComponent<c3d::components::audio::AudioListener>();
 	}
-
-	//auto camera1 = m_gameScene.CreateObject("Camera 1");
-	//{
-	//	auto cameraComponent = camera1->AddComponent<c3d::components::rendering::Camera>();
-	//	cameraComponent->RendererIndex = 1u;
-	//	cameraComponent->StretchFactor = 0.5f;
-	//	auto lookAtComponent = camera1->AddComponent<c3d::components::other::LookAt>();
-	//	lookAtComponent->Target = mesh1;
-	//	camera1->Transform->Position = { 3.0f, 3.0f, 3.0f };
-	//}
 
 	auto envmap = m_gameScene.CreateObject("Envmap");
 	{
@@ -134,38 +121,59 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		envComponent->Intensity = 0.03f;
 	}
 
+	// Light
+	float hauterLight = 1.0f;
 	auto light1 = m_gameScene.CreateObject("Light1");
 	{
 		auto lightComp = light1->AddComponent<c3d::components::rendering::Light>();
 		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
 		lightComp->Intensity = 40.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
-		lightComp->SpotAngles = { 30.0f, 30.0f };
-		light1->Transform->Position = { -3.0f, 3.0f, -3.0f };
+		lightComp->SpotAngles = { 20.0f, 20.0f };
+		light1->Transform->Position = { 0.0f, hauterLight, -5.0f };
 
 		auto lookAtComponent = light1->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = target;
-
 	}
 
 	auto light2 = m_gameScene.CreateObject("Light2");
 	{
 		auto lightComp = light2->AddComponent<c3d::components::rendering::Light>();
-		lightComp->Color = glm::vec3(0.4f, 0.6f, 1.0f);
+		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
 		lightComp->Intensity = 40.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
-		lightComp->SpotAngles = { 30.0f, 30.0f };
-		light2->Transform->Position = { -3.0f, 3.0f, 3.0f };
+		lightComp->SpotAngles = { 20.0f, 20.0f };
+		light2->Transform->Position = { 0.0f, hauterLight, 5.0f };
 
 		auto lookAtComponent = light2->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = target;
 	}
 
-	//auto sound = m_gameScene.CreateObject("Audio");
-	//{
-	//	auto audioComp = sound->AddComponent<c3d::components::audio::AudioSource>();
-	//	audioComp->Sound = ga::assets::AssetManager::Global().Load<ga::audio::SoundHandle>("/assets/evoke26.mp3");
-	//}
+	auto light3 = m_gameScene.CreateObject("Light3");
+	{
+		auto lightComp = light3->AddComponent<c3d::components::rendering::Light>();
+		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
+		lightComp->Intensity = 40.0f;
+		lightComp->Type = c3d::components::rendering::ELightType::Spot;
+		lightComp->SpotAngles = { 20.0f, 20.0f };
+		light3->Transform->Position = { 5.0f, hauterLight, 0.0f };
+
+		auto lookAtComponent = light3->AddComponent<c3d::components::other::LookAt>();
+		lookAtComponent->Target = target;
+	}
+
+	auto light4 = m_gameScene.CreateObject("Light4");
+	{
+		auto lightComp = light4->AddComponent<c3d::components::rendering::Light>();
+		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
+		lightComp->Intensity = 40.0f;
+		lightComp->Type = c3d::components::rendering::ELightType::Spot;
+		lightComp->SpotAngles = { 20.0f, 20.0f };
+		light4->Transform->Position = { -5.0f, 5.0f, 0.0f };
+
+		auto lookAtComponent = light4->AddComponent<c3d::components::other::LookAt>();
+		lookAtComponent->Target = target;
+	}
 }
 
 void ExampleGame::Deinitialize()
