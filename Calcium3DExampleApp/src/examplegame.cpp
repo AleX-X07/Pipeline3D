@@ -57,19 +57,26 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		behaviour->CreateListOfLineAroundTower(hauteur, gpu, m_gameScene, posCylinder, 4, rayon, hauteurCube);
 
 	}
+
+	float radiusGame = 10.0f;
+	
+	auto areaGame = m_gameScene.CreateObject("Area");
+	{
+		auto sphereComp = areaGame->AddComponent<CylinderComponent>(radiusGame);
+	}
+
 	auto raquette = m_gameScene.CreateObject("Raquette");
 	{
 		float width = 2.0f;
 		float height = 1.0f;
 		float depth = 2.0f;
 
-		float r = 10.0f;
 		glm::vec3 center = m_gameScene.GetObject("Tower")->Transform->Position;
 		float speed = 1.0f;
 
 		auto renderMeshComponent = raquette->AddComponent<c3d::components::rendering::Mesh>();
 		auto createMeshComponent = raquette->AddComponent<CubeComponent>();
-		auto movementComponent = raquette->AddComponent<RaquetteComponent>(r, center, speed);
+		auto movementComponent = raquette->AddComponent<RaquetteComponent>(radiusGame, center, speed);
 
 		createMeshComponent->CreateProceduralMesh(gpu, width, height, depth);
 		renderMeshComponent->Asset = createMeshComponent->GetMyMesh();
@@ -87,7 +94,8 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		renderComponent->Asset = createMeshComponent->GetMyMesh();
 
 		sphere->Transform->Position = { 3.0f ,0.0f + r, 0.0f };
-
+		auto sphereComp = sphere->GetComponent<SphereComponent>();
+		sphereComp->startPos = sphere->Transform->Position();
 	}
 
 	auto ground = m_gameScene.CreateObject("Ground");
@@ -191,6 +199,7 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 	auto tower = m_gameScene.GetObject("Tower");
 	auto sphere = m_gameScene.GetObject("Sphere");
 	auto raquette = m_gameScene.GetObject("Raquette");
+	auto area = m_gameScene.GetObject("Area");
 
 	// Collision avec la raquette
 	auto sphereComp = sphere->GetComponent<SphereComponent>();
@@ -217,6 +226,9 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 	glm::vec3 raquettePos = raquette->Transform->Position();
 	camera->Transform->Position = raquettePos * 1.2f + glm::vec3(0.0f, 1.2f, 0.0f);
 	camera->Transform->Orientation = glm::quat({ -glm::pi<float>() / 12.0f, glm::pi<float>() / 2.0f - raquetteAngle, 0.0f });
+
+	// Win
+	sphereComp->CheckWin(area, raquette);
 }
 
 std::vector<ga::gpu::SemaphoreId> ExampleGame::Render(c3d::GameSubsystems& subsystems, ga::gpu::Image& frameImage, const ga::gpu::CommandEncoder& encoder)

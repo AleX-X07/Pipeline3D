@@ -17,6 +17,7 @@ class CylinderComponent
 
 public:
 	explicit CylinderComponent(c3d::GameObject* owner);
+	explicit CylinderComponent(c3d::GameObject* owner, float radius);
 	explicit CylinderComponent(ga::core::CttiDeserializer& deserializer);
 
 	void CreateCylinder(float h, float r, uint32_t numSegments, uint32_t numSlices, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<uint32_t>& indices);
