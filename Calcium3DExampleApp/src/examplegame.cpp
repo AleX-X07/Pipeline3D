@@ -107,7 +107,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		ground->Transform->Position = { 0.0f, -0.25f, 0.0f };
 	}
 
-	// Target de la camera
+	// Camera target
 	auto target = tower;
 
 	auto camera0 = m_gameScene.CreateObject("Camera 0");
@@ -123,10 +123,12 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 
 	// Light
 	float hauterLight = 5.0f;
+	glm::vec3 colorLight = { 0.53f, 0.81f, 0.98f };
+
 	auto light1 = m_gameScene.CreateObject("Light1");
 	{
 		auto lightComp = light1->AddComponent<c3d::components::rendering::Light>();
-		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
+		lightComp->Color = colorLight;
 		lightComp->Intensity = 100.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
 		lightComp->SpotAngles = { 20.0f, 20.0f };
@@ -139,7 +141,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	auto light2 = m_gameScene.CreateObject("Light2");
 	{
 		auto lightComp = light2->AddComponent<c3d::components::rendering::Light>();
-		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
+		lightComp->Color = colorLight;
 		lightComp->Intensity = 100.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
 		lightComp->SpotAngles = { 20.0f, 20.0f };
@@ -152,7 +154,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	auto light3 = m_gameScene.CreateObject("Light3");
 	{
 		auto lightComp = light3->AddComponent<c3d::components::rendering::Light>();
-		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
+		lightComp->Color = colorLight;
 		lightComp->Intensity = 100.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
 		lightComp->SpotAngles = { 20.0f, 20.0f };
@@ -165,7 +167,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	auto light4 = m_gameScene.CreateObject("Light4");
 	{
 		auto lightComp = light4->AddComponent<c3d::components::rendering::Light>();
-		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
+		lightComp->Color = colorLight;
 		lightComp->Intensity = 100.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
 		lightComp->SpotAngles = { 20.0f, 20.0f };
@@ -193,7 +195,7 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 	auto raquette = m_gameScene.GetObject("Raquette");
 	auto area = m_gameScene.GetObject("Area");
 
-	// Collision avec la raquette
+	// Raquette collide
 	auto sphereComp = sphere->GetComponent<SphereComponent>();
 	auto cubeComp = raquette->GetComponent<CubeComponent>();
 
@@ -202,13 +204,13 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 	bool touchingRaquette = sphereComp->OnCollisionCube(SphereInRaquette, cubeComp->GetSize(), sphereComp->GetRadius());
 	sphereComp->HandleRaquetteCollision(touchingRaquette);
 
-	// Collision avec la tour
+	// Tower collide
 	auto towerComp = tower->GetComponent<CylinderComponent>();
 
 	bool touchingTower = sphereComp->OnCollisionCylinder(sphere->Transform->Position(), tower->Transform->Position(), sphereComp->GetRadius(), towerComp->GetRadius());
 	sphereComp->HandleCylinderCollision(touchingTower,tower);
 
-	// Destruction des bloc
+	// Bloc destruction
 	auto behaviour = tower->GetComponent<BehaviourTower>();
 	behaviour->DestroyBloc(m_gameScene, sphere);
 	float raquetteAngle = raquette->GetComponent<RaquetteComponent>()->angle;
