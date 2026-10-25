@@ -121,24 +121,16 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		auto listenerComponent = camera0->AddComponent<c3d::components::audio::AudioListener>();
 	}
 
-	auto envmap = m_gameScene.CreateObject("Envmap");
-	{
-		auto envComponent = camera0->AddComponent<c3d::components::rendering::Environment>();
-		envComponent->Diffuse = ga::assets::AssetManager::Global().Load<ga::gpu::Image>("/assets/envmap/Tokyo_BigSight_Env.hdr");
-		envComponent->Specular = ga::assets::AssetManager::Global().Load<ga::gpu::Image>("/assets/envmap/Tokyo_BigSight_3k.hdr");
-		envComponent->Intensity = 0.03f;
-	}
-
 	// Light
-	float hauterLight = 1.0f;
+	float hauterLight = 5.0f;
 	auto light1 = m_gameScene.CreateObject("Light1");
 	{
 		auto lightComp = light1->AddComponent<c3d::components::rendering::Light>();
 		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
-		lightComp->Intensity = 40.0f;
+		lightComp->Intensity = 100.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
 		lightComp->SpotAngles = { 20.0f, 20.0f };
-		light1->Transform->Position = { 0.0f, hauterLight, -5.0f };
+		light1->Transform->Position = { -1.0f, hauterLight, -3.0f };
 
 		auto lookAtComponent = light1->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = target;
@@ -148,10 +140,10 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	{
 		auto lightComp = light2->AddComponent<c3d::components::rendering::Light>();
 		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
-		lightComp->Intensity = 40.0f;
+		lightComp->Intensity = 100.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
 		lightComp->SpotAngles = { 20.0f, 20.0f };
-		light2->Transform->Position = { 0.0f, hauterLight, 5.0f };
+		light2->Transform->Position = { 0.0f, hauterLight, 3.0f };
 
 		auto lookAtComponent = light2->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = target;
@@ -161,10 +153,10 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	{
 		auto lightComp = light3->AddComponent<c3d::components::rendering::Light>();
 		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
-		lightComp->Intensity = 40.0f;
+		lightComp->Intensity = 100.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
 		lightComp->SpotAngles = { 20.0f, 20.0f };
-		light3->Transform->Position = { 5.0f, hauterLight, 0.0f };
+		light3->Transform->Position = { 3.0f, hauterLight, 0.0f };
 
 		auto lookAtComponent = light3->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = target;
@@ -174,10 +166,10 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	{
 		auto lightComp = light4->AddComponent<c3d::components::rendering::Light>();
 		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
-		lightComp->Intensity = 40.0f;
+		lightComp->Intensity = 100.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
 		lightComp->SpotAngles = { 20.0f, 20.0f };
-		light4->Transform->Position = { -5.0f, 5.0f, 0.0f };
+		light4->Transform->Position = { -3.0f, 5.0f, 0.0f };
 
 		auto lookAtComponent = light4->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = target;
