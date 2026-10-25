@@ -211,3 +211,13 @@ int& SphereComponent::GetLife()
 {
 	return life;
 }
+
+int& SphereComponent::GetScore()
+{
+	return score;
+}
+
+bool SphereComponent::Loose()
+{
+	return loose;
+}

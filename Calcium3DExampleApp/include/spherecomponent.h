@@ -16,7 +16,8 @@ class SphereComponent
 	GA_CTTI_OBJECT(SphereComponent, c3d::Component);
 
 	float speed = 1.0f;
-	int life = 3.0f;
+	int life = 3;
+	int score = 0;
 
 	ga::render::Mesh myMesh;
 	bool isMoving = false;
@@ -56,6 +57,8 @@ public:
 	ga::render::Mesh& GetMyMesh();
 	float& GetRadius();
 	int& GetLife();
+	int& GetScore();
+	bool Loose();
 };
 
 #endif

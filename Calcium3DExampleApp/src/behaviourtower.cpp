@@ -108,6 +108,7 @@ void BehaviourTower::DestroyBloc(c3d::GameScene& m_gameScene, c3d::GameObject* s
 
 		if (sphereComp->OnCollisionCube(SphereInB, bComp->GetSize(), sphereComp->GetRadius()) && collide == false)
 		{
+			sphereComp->GetScore() += 10;
 			collide = true;
 			m_gameScene.RemoveObject(b);
 			b->RemoveComponent<c3d::components::rendering::Mesh>();

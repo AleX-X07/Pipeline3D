@@ -101,17 +101,52 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	}
 
 	// UI
-	auto UI = m_gameScene.CreateObject("UI");
+	auto UILife = m_gameScene.CreateObject("UILife");
 	{
-		auto textComp = UI->AddComponent<c3d::components::rendering::Text2D>();
+		auto textComp = UILife->AddComponent<c3d::components::rendering::Text2D>();
+
+		auto sphereComp = m_gameScene.GetObject("Sphere")->GetComponent<SphereComponent>();
+
+		std::string life = std::to_string(sphereComp->GetLife());
 
 		auto& font = ga::assets::AssetManager::Global().Load<ga::render::Font>("/assets/Game Of Squids.ttf");
 		textComp->Font = font;
-		textComp->Text = "test";
+		textComp->Text = "Life : " + life;
 		textComp->Color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-	}
-	UI->Transform->Position = { 50.0f, 30.0f, 0.0f };
 
+		UILife->Transform->Position = { 50.0f, 30.0f, 0.0f };
+	}
+
+	auto UIScore = m_gameScene.CreateObject("UIScore");
+	{
+		auto textComp = UIScore->AddComponent<c3d::components::rendering::Text2D>();
+
+		auto sphereComp = m_gameScene.GetObject("Sphere")->GetComponent<SphereComponent>();
+
+		std::string score = std::to_string(sphereComp->GetScore());
+
+		auto& font = ga::assets::AssetManager::Global().Load<ga::render::Font>("/assets/Game Of Squids.ttf");
+		textComp->Font = font;
+		textComp->Text = "Score : " + score;
+		textComp->Color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
+		UIScore->Transform->Position = { 1920.0f - 300.0f, 30.0f, 0.0f };
+	}
+
+	auto UIDeath = m_gameScene.CreateObject("UIDeath");
+	{
+
+		auto textComp = UIDeath->AddComponent<c3d::components::rendering::Text2D>();
+
+		auto& font = ga::assets::AssetManager::Global().Load<ga::render::Font>("/assets/Game Of Squids.ttf");
+		textComp->Font = font;
+		textComp->Text = "";
+		textComp->Color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
+		UIDeath->Transform->Position = { 1920.0f / 2 - 100.0f, 1080.0f / 2 - 100.0f, 0.0f };
+	}
+
+	// Ground
 	auto ground = m_gameScene.CreateObject("Ground");
 	{
 		auto mesh2Component = ground->AddComponent<c3d::components::rendering::Mesh>();
@@ -232,12 +267,40 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 
 	// Camera
 	auto camera = m_gameScene.GetObject("Camera 0");
-	glm::vec3 raquettePos = raquette->Transform->Position();
-	camera->Transform->Position = raquettePos * 1.12f + glm::vec3(0.0f, 1.2f, 0.0f);
-	camera->Transform->Orientation = glm::quat({ -glm::pi<float>() / 12.0f, glm::pi<float>() / 2.0f - raquetteAngle, 0.0f });
+	{
+		glm::vec3 raquettePos = raquette->Transform->Position();
+		camera->Transform->Position = raquettePos * 1.12f + glm::vec3(0.0f, 1.2f, 0.0f);
+		camera->Transform->Orientation = glm::quat({ -glm::pi<float>() / 12.0f, glm::pi<float>() / 2.0f - raquetteAngle, 0.0f });
+	}
+
+	// UI
+	auto UILife = m_gameScene.GetObject("UILife");
+	{
+		std::string life = std::to_string(sphereComp->GetLife());
+
+		auto comp = UILife->GetComponent<c3d::components::rendering::Text2D>();
+		comp->Text = "Life : " + life;
+	}
+
+	auto UIScore = m_gameScene.GetObject("UIScore");
+	{
+		std::string score = std::to_string(sphereComp->GetScore());
+
+		auto comp = UIScore->GetComponent<c3d::components::rendering::Text2D>();
+		comp->Text = "Score : " + score;
+	}
 
 	// Win
 	sphereComp->CheckWin(area, raquette);
+	if (sphereComp->Loose())
+	{
+		auto UIDeath = m_gameScene.GetObject("UIDeath");
+		{
+			auto textComp = UIDeath->GetComponent<c3d::components::rendering::Text2D>();
+
+			textComp->Text = "You loose !";
+		}
+	}
 }
 
 std::vector<ga::gpu::SemaphoreId> ExampleGame::Render(c3d::GameSubsystems& subsystems, ga::gpu::Image& frameImage, const ga::gpu::CommandEncoder& encoder)
