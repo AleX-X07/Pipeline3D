@@ -29,6 +29,8 @@ class SphereComponent
 	bool loose = false;
 	bool win = false;
 
+	glm::vec3 impactPoint = { 0.0f,0.0f,0.0f };
+
 public:
 	glm::vec3 startPos = { 0.0f, 0.0f, 0.0f };
 

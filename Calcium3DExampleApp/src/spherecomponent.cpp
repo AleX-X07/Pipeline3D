@@ -124,6 +124,7 @@ bool SphereComponent::OnCollisionCylinder(glm::vec3 posSphere, glm::vec3 posCyli
 	);
 	if (res < rad)
 	{
+		impactPoint = { posSphere.x, 0.0f, posSphere.z };
 		return true;
 	}
 	else
@@ -151,16 +152,8 @@ void SphereComponent::HandleCylinderCollision(bool isColliding, c3d::GameObject*
 {
 	if (isColliding)
 	{
-		auto towerCenter = tower->Transform->Position();
-		auto sphereCenter = GetGameObject()->Transform->Position();
-
-		direction = glm::normalize(glm::vec3{
-			sphereCenter.x - towerCenter.x,
-			0.0f,
-			sphereCenter.z - towerCenter.z
-		});
-
-		auto test = 0.0f;
+		auto normal = glm::normalize(impactPoint);
+		direction = glm::reflect(direction, normal);
 	}
 }
 
