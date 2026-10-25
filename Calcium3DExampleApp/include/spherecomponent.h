@@ -24,7 +24,7 @@ class SphereComponent
 	c3d::GameObject* raquette = nullptr;
 
 	float radius = 0.0f;
-	glm::vec3 direction = { 1.0f, 0.0f, 0.0f };  
+	glm::vec3 direction = { 0.0f, 0.0f, 0.0f };  
 
 	bool loose = false;
 	bool win = false;
