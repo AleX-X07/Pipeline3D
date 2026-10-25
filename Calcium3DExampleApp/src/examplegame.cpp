@@ -37,8 +37,6 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 {
 	Game::Initialize(platform, gpu);
 
-	//m_renderer = std::make_unique<c3d::graphics::SplitScreenRenderer>(gpu, c3d::graphics::EScreenSplitDirection::Vertical);
-	//((c3d::graphics::SplitScreenRenderer*)m_renderer.get())->SetSplitLine(4.0f, { 1.0f, 0.0f, 1.0f });
 	m_renderer = std::make_unique<c3d::graphics::DefaultRenderer>(gpu);
 
 	auto tower = m_gameScene.CreateObject("Tower");
@@ -59,19 +57,26 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		behaviour->CreateListOfLineAroundTower(hauteur, gpu, m_gameScene, posCylinder, 4, rayon, hauteurCube);
 
 	}
+
+	float radiusGame = 10.0f;
+	
+	auto areaGame = m_gameScene.CreateObject("Area");
+	{
+		auto sphereComp = areaGame->AddComponent<CylinderComponent>(radiusGame);
+	}
+
 	auto raquette = m_gameScene.CreateObject("Raquette");
 	{
 		float width = 2.0f;
 		float height = 1.0f;
 		float depth = 2.0f;
 
-		float r = 10.0f;
 		glm::vec3 center = m_gameScene.GetObject("Tower")->Transform->Position;
 		float speed = 1.0f;
 
 		auto renderMeshComponent = raquette->AddComponent<c3d::components::rendering::Mesh>();
 		auto createMeshComponent = raquette->AddComponent<CubeComponent>();
-		auto movementComponent = raquette->AddComponent<RaquetteComponent>(r, center, speed);
+		auto movementComponent = raquette->AddComponent<RaquetteComponent>(radiusGame, center, speed);
 
 		createMeshComponent->CreateProceduralMesh(gpu, width, height, depth);
 		renderMeshComponent->Asset = createMeshComponent->GetMyMesh();
@@ -89,7 +94,8 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		renderComponent->Asset = createMeshComponent->GetMyMesh();
 
 		sphere->Transform->Position = { 3.0f ,0.0f + r, 0.0f };
-
+		auto sphereComp = sphere->GetComponent<SphereComponent>();
+		sphereComp->startPos = sphere->Transform->Position();
 	}
 
 	auto ground = m_gameScene.CreateObject("Ground");
@@ -108,7 +114,6 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	{
 		auto cameraComponent = camera0->AddComponent<c3d::components::rendering::Camera>();
 		cameraComponent->RendererIndex = 0u;
-		//cameraComponent->StretchFactor = 0.5f;
 		auto lookAtComponent = camera0->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = target;
 		camera0->Transform->Position = { 0.0f, 1.0f, 5.0f };
@@ -116,56 +121,59 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		auto listenerComponent = camera0->AddComponent<c3d::components::audio::AudioListener>();
 	}
 
-	//auto camera1 = m_gameScene.CreateObject("Camera 1");
-	//{
-	//	auto cameraComponent = camera1->AddComponent<c3d::components::rendering::Camera>();
-	//	cameraComponent->RendererIndex = 1u;
-	//	cameraComponent->StretchFactor = 0.5f;
-	//	auto lookAtComponent = camera1->AddComponent<c3d::components::other::LookAt>();
-	//	lookAtComponent->Target = mesh1;
-	//	camera1->Transform->Position = { 3.0f, 3.0f, 3.0f };
-	//}
-
-	auto envmap = m_gameScene.CreateObject("Envmap");
-	{
-		auto envComponent = camera0->AddComponent<c3d::components::rendering::Environment>();
-		envComponent->Diffuse = ga::assets::AssetManager::Global().Load<ga::gpu::Image>("/assets/envmap/Tokyo_BigSight_Env.hdr");
-		envComponent->Specular = ga::assets::AssetManager::Global().Load<ga::gpu::Image>("/assets/envmap/Tokyo_BigSight_3k.hdr");
-		envComponent->Intensity = 0.03f;
-	}
-
+	// Light
+	float hauterLight = 5.0f;
 	auto light1 = m_gameScene.CreateObject("Light1");
 	{
 		auto lightComp = light1->AddComponent<c3d::components::rendering::Light>();
 		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
-		lightComp->Intensity = 40.0f;
+		lightComp->Intensity = 100.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
-		lightComp->SpotAngles = { 30.0f, 30.0f };
-		light1->Transform->Position = { -3.0f, 3.0f, -3.0f };
+		lightComp->SpotAngles = { 20.0f, 20.0f };
+		light1->Transform->Position = { -1.0f, hauterLight, -3.0f };
 
 		auto lookAtComponent = light1->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = target;
-
 	}
 
 	auto light2 = m_gameScene.CreateObject("Light2");
 	{
 		auto lightComp = light2->AddComponent<c3d::components::rendering::Light>();
-		lightComp->Color = glm::vec3(0.4f, 0.6f, 1.0f);
-		lightComp->Intensity = 40.0f;
+		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
+		lightComp->Intensity = 100.0f;
 		lightComp->Type = c3d::components::rendering::ELightType::Spot;
-		lightComp->SpotAngles = { 30.0f, 30.0f };
-		light2->Transform->Position = { -3.0f, 3.0f, 3.0f };
+		lightComp->SpotAngles = { 20.0f, 20.0f };
+		light2->Transform->Position = { 0.0f, hauterLight, 3.0f };
 
 		auto lookAtComponent = light2->AddComponent<c3d::components::other::LookAt>();
 		lookAtComponent->Target = target;
 	}
 
-	//auto sound = m_gameScene.CreateObject("Audio");
-	//{
-	//	auto audioComp = sound->AddComponent<c3d::components::audio::AudioSource>();
-	//	audioComp->Sound = ga::assets::AssetManager::Global().Load<ga::audio::SoundHandle>("/assets/evoke26.mp3");
-	//}
+	auto light3 = m_gameScene.CreateObject("Light3");
+	{
+		auto lightComp = light3->AddComponent<c3d::components::rendering::Light>();
+		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
+		lightComp->Intensity = 100.0f;
+		lightComp->Type = c3d::components::rendering::ELightType::Spot;
+		lightComp->SpotAngles = { 20.0f, 20.0f };
+		light3->Transform->Position = { 3.0f, hauterLight, 0.0f };
+
+		auto lookAtComponent = light3->AddComponent<c3d::components::other::LookAt>();
+		lookAtComponent->Target = target;
+	}
+
+	auto light4 = m_gameScene.CreateObject("Light4");
+	{
+		auto lightComp = light4->AddComponent<c3d::components::rendering::Light>();
+		lightComp->Color = glm::vec3(1.0f, 0.6f, 0.4f);
+		lightComp->Intensity = 100.0f;
+		lightComp->Type = c3d::components::rendering::ELightType::Spot;
+		lightComp->SpotAngles = { 20.0f, 20.0f };
+		light4->Transform->Position = { -3.0f, 5.0f, 0.0f };
+
+		auto lookAtComponent = light4->AddComponent<c3d::components::other::LookAt>();
+		lookAtComponent->Target = target;
+	}
 }
 
 void ExampleGame::Deinitialize()
@@ -183,6 +191,7 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 	auto tower = m_gameScene.GetObject("Tower");
 	auto sphere = m_gameScene.GetObject("Sphere");
 	auto raquette = m_gameScene.GetObject("Raquette");
+	auto area = m_gameScene.GetObject("Area");
 
 	// Collision avec la raquette
 	auto sphereComp = sphere->GetComponent<SphereComponent>();
@@ -209,6 +218,9 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 	glm::vec3 raquettePos = raquette->Transform->Position();
 	camera->Transform->Position = raquettePos * 1.2f + glm::vec3(0.0f, 1.2f, 0.0f);
 	camera->Transform->Orientation = glm::quat({ -glm::pi<float>() / 12.0f, glm::pi<float>() / 2.0f - raquetteAngle, 0.0f });
+
+	// Win
+	sphereComp->CheckWin(area, raquette);
 }
 
 std::vector<ga::gpu::SemaphoreId> ExampleGame::Render(c3d::GameSubsystems& subsystems, ga::gpu::Image& frameImage, const ga::gpu::CommandEncoder& encoder)

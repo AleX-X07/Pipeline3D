@@ -16,16 +16,22 @@ class SphereComponent
 	GA_CTTI_OBJECT(SphereComponent, c3d::Component);
 
 	float speed = 1.0f;
+	int life = 3.0f;
 
 	ga::render::Mesh myMesh;
 	bool isMoving = false;
 
-	c3d::GameObject* raquette;
+	c3d::GameObject* raquette = nullptr;
 
-	float radius;
-	glm::vec3 direction = { 1.0f, 0.0f, 0.0f };  
+	float radius = 0.0f;
+	glm::vec3 direction = { 0.0f, 0.0f, 0.0f };  
+
+	bool loose = false;
+	bool win = false;
 
 public:
+	glm::vec3 startPos = { 0.0f, 0.0f, 0.0f };
+
 	explicit SphereComponent(c3d::GameObject* owner, float _speed);
 	explicit SphereComponent(ga::core::CttiDeserializer& deserializer);
 
@@ -40,10 +46,14 @@ public:
 	void HandleRaquetteCollision(bool isColliding);
 	void HandleCylinderCollision(bool isColliding, c3d::GameObject* tower);
 	
+	// Win
+	void CheckWin(c3d::GameObject* area, c3d::GameObject* raquette);
+
 	virtual void Update(float t, float dt, c3d::GameSubsystems& subsystems) override;
 
 	ga::render::Mesh& GetMyMesh();
 	float& GetRadius();
+	int& GetLife();
 };
 
 #endif

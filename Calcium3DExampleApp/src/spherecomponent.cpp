@@ -1,6 +1,9 @@
 #include <spherecomponent.h>
 #include <iostream>
 
+#include <cylindercomponent.h>
+#include <cubecomponent.h>
+
 
 SphereComponent::SphereComponent(c3d::GameObject* owner, float _speed) :
 	c3d::Component(owner), speed(_speed)
@@ -161,13 +164,36 @@ void SphereComponent::HandleCylinderCollision(bool isColliding, c3d::GameObject*
 	}
 }
 
+void SphereComponent::CheckWin(c3d::GameObject* area, c3d::GameObject* raquette)
+{
+	auto ownerCenter = GetGameObject()->Transform->Position();
+	auto areaCenter = area->Transform->Position();
+	auto areaComp = area->GetComponent<CylinderComponent>();
+	auto raquetteComp = raquette->GetComponent<CubeComponent>();
+
+	if (!OnCollisionCylinder(ownerCenter, areaCenter, this->GetRadius() + raquetteComp->GetSize().x, areaComp->GetRadius()))
+	{
+		isMoving = false;
+		life--;
+		if (life == 0)
+		{
+			loose = true;
+		}
+		GetGameObject()->Transform->Position = startPos;
+	}
+}
+
 void SphereComponent::Update(float t, float dt, c3d::GameSubsystems& subsystems)
 {
 	auto ball = GetGameObject();
 	bool pressBar = subsystems.platform.Input().IsPressed(ga::platform::EKey::Space);
 	glm::vec3 vecRebond = { 0.0f,0.0f,0.0f };
-
-	if (pressBar) {
+	if (pressBar && !loose) {
+		direction = glm::normalize(glm::vec3{
+			raquette->Transform->Position->x - ball->Transform->Position->x,
+			0.0f,
+			raquette->Transform->Position->z - ball->Transform->Position->z,
+		});
 		isMoving = true;
 	}
 
@@ -186,4 +212,9 @@ ga::render::Mesh& SphereComponent::GetMyMesh()
 float& SphereComponent::GetRadius()
 {
 	return radius;
+}
+
+int& SphereComponent::GetLife()
+{
+	return life;
 }

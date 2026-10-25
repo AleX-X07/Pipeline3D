@@ -6,6 +6,11 @@ CylinderComponent::CylinderComponent(c3d::GameObject* owner)
 
 }
 
+CylinderComponent::CylinderComponent(c3d::GameObject* owner, float radius)
+	: c3d::Component(owner), r(radius)
+{
+}
+
 CylinderComponent::CylinderComponent(ga::core::CttiDeserializer& deserializer)
 	: c3d::Component(deserializer)
 {
