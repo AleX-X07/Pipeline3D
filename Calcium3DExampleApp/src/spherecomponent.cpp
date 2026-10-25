@@ -188,7 +188,6 @@ void SphereComponent::Update(float t, float dt, c3d::GameSubsystems& subsystems)
 	auto ball = GetGameObject();
 	bool pressBar = subsystems.platform.Input().IsPressed(ga::platform::EKey::Space);
 	glm::vec3 vecRebond = { 0.0f,0.0f,0.0f };
-
 	if (pressBar && !loose) {
 		direction = glm::normalize(glm::vec3{
 			raquette->Transform->Position->x - ball->Transform->Position->x,
