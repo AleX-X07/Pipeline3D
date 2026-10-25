@@ -216,7 +216,7 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 	// Camera
 	auto camera = m_gameScene.GetObject("Camera 0");
 	glm::vec3 raquettePos = raquette->Transform->Position();
-	camera->Transform->Position = raquettePos * 1.2f + glm::vec3(0.0f, 1.2f, 0.0f);
+	camera->Transform->Position = raquettePos * 1.12f + glm::vec3(0.0f, 1.2f, 0.0f);
 	camera->Transform->Orientation = glm::quat({ -glm::pi<float>() / 12.0f, glm::pi<float>() / 2.0f - raquetteAngle, 0.0f });
 
 	// Win
