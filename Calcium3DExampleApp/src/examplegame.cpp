@@ -57,7 +57,6 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		tower->Transform->Position->y = hauteur / 2.0f;
 		auto posCylinder = tower->Transform->Position;
 		behaviour->CreateListOfLineAroundTower(hauteur, gpu, m_gameScene, posCylinder, 4, rayon, hauteurCube);
-
 	}
 
 	float radiusGame = 10.0f;
@@ -299,6 +298,15 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 			auto textComp = UIDeath->GetComponent<c3d::components::rendering::Text2D>();
 
 			textComp->Text = "You loose !";
+		}
+	}
+	else if (sphereComp->Loose() && behaviour->VecBlockEmpty())
+	{
+		auto UIDeath = m_gameScene.GetObject("UIDeath");
+		{
+			auto textComp = UIDeath->GetComponent<c3d::components::rendering::Text2D>();
+
+			textComp->Text = "You win !";
 		}
 	}
 }

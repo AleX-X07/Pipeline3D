@@ -139,3 +139,22 @@ void BehaviourTower::DestroyBloc(c3d::GameScene& m_gameScene, c3d::GameObject* s
 	}
 }
 
+bool BehaviourTower::VecBlockEmpty()
+{
+	int size = listLine.size();
+	int size2 = 0;
+	for (auto vec : listLine)
+	{
+		if (vec.empty())
+		{
+			size2++;
+		}
+	}
+
+	if (size2 == size)
+	{
+		return true;
+	}
+	return false;
+}
+

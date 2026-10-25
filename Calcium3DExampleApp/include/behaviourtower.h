@@ -31,6 +31,7 @@ public:
 	void CreateListOfLineAroundTower(float hCylinder, ga::gpu::Device& gpu, c3d::GameScene& m_gamescene, glm::vec3 center, unsigned int nbrCubeStart, float r, float hCube);
 	
 	void DestroyBloc(c3d::GameScene& m_gameScene, c3d::GameObject* sphere);
+	bool VecBlockEmpty();
 };
 
 #endif
