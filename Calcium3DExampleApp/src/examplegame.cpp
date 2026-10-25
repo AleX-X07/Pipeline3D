@@ -13,6 +13,7 @@
 #include <c3d/components/rendering/camera.h>
 #include <c3d/components/rendering/light.h>
 #include <c3d/components/rendering/mesh.h>
+#include <c3d/components/rendering/text2d.h>
 #include <c3d/components/rendering/environment.h>
 #include <c3d/components/other/lookat.h>
 
@@ -29,7 +30,7 @@
 #include <iostream>
 #include <vector>
 
-ExampleGame::ExampleGame()
+ExampleGame::ExampleGame() : m_renderer2d(nullptr)
 {
 }
 
@@ -38,6 +39,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 	Game::Initialize(platform, gpu);
 
 	m_renderer = std::make_unique<c3d::graphics::DefaultRenderer>(gpu);
+	m_renderer2d = std::make_unique<c3d::graphics::Renderer2D>(gpu);
 
 	auto tower = m_gameScene.CreateObject("Tower");
 	{
@@ -97,6 +99,18 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 		auto sphereComp = sphere->GetComponent<SphereComponent>();
 		sphereComp->startPos = sphere->Transform->Position();
 	}
+
+	// UI
+	auto UI = m_gameScene.CreateObject("UI");
+	{
+		auto textComp = UI->AddComponent<c3d::components::rendering::Text2D>();
+
+		auto& font = ga::assets::AssetManager::Global().Load<ga::render::Font>("/assets/Game Of Squids.ttf");
+		textComp->Font = font;
+		textComp->Text = "test";
+		textComp->Color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	}
+	UI->Transform->Position = { 50.0f, 30.0f, 0.0f };
 
 	auto ground = m_gameScene.CreateObject("Ground");
 	{
@@ -181,6 +195,7 @@ void ExampleGame::Initialize(ga::platform::Platform& platform, ga::gpu::Device& 
 void ExampleGame::Deinitialize()
 {
 	m_renderer.reset();
+	m_renderer2d.reset();
 	m_gameScene.Clear();
 	Game::Deinitialize();
 }
@@ -227,8 +242,13 @@ void ExampleGame::Update(c3d::GameSubsystems& subsystems, float t, float dt)
 
 std::vector<ga::gpu::SemaphoreId> ExampleGame::Render(c3d::GameSubsystems& subsystems, ga::gpu::Image& frameImage, const ga::gpu::CommandEncoder& encoder)
 {
-	m_gameScene.Render(*m_renderer);
-	return m_renderer->Render(subsystems.gpu, encoder, frameImage);
+	m_gameScene.Render(*m_renderer, m_renderer2d.get());
+	m_gameScene.PostRender(*m_renderer);
+
+	auto result = m_renderer->Render(subsystems.gpu, encoder, frameImage);
+	m_renderer2d->Render(encoder, frameImage);
+
+	return result;
 }
 
 void ExampleGame::RenderUi()

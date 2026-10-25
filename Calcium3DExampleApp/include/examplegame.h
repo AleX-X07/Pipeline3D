@@ -6,12 +6,15 @@
 #include <c3d/gamescene.h>
 
 #include <gallium/render/rendererbase.h>
+#include <c3d/graphics/renderer2d.h>
 
 class ExampleGame
 	: public c3d::Game
 {
 	c3d::GameScene m_gameScene;
 	std::unique_ptr<ga::render::RendererBase> m_renderer;
+
+	std::unique_ptr<c3d::graphics::Renderer2D> m_renderer2d;
 
 public:
 	ExampleGame();
