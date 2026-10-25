@@ -29,13 +29,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -160,6 +160,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <SlangCompileTask Include="shaders\2d\shape2d.slang" />
     <SlangCompileTask Include="shaders\c3d\shadow.slang">
       <FileType>Document</FileType>
       <Entrypoints Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">vs_main</Entrypoints>
@@ -169,6 +170,7 @@
     <ClCompile Include="src\componentfactory.cpp" />
     <ClCompile Include="src\components\audio\audiolistenercomponent.cpp" />
     <ClCompile Include="src\components\audio\audiosourcecomponent.cpp" />
+    <ClCompile Include="src\components\rendering\text2d.cpp" />
     <ClCompile Include="src\components\other\lookat.cpp" />
     <ClCompile Include="src\components\physics\boxcollider.cpp" />
     <ClCompile Include="src\components\physics\capsulecollider.cpp" />
@@ -182,6 +184,7 @@
     <ClCompile Include="src\gamescene.cpp" />
     <ClCompile Include="src\gameobject.cpp" />
     <ClCompile Include="src\graphics\defaultrenderer.cpp" />
+    <ClCompile Include="src\graphics\renderer2d.cpp" />
     <ClCompile Include="src\graphics\splitscreenrenderer.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp" />
     <ClCompile Include="src\imgui\imgui_draw.cpp" />
@@ -214,10 +217,12 @@
     <ClInclude Include="include\c3d\components\rendering\environment.h" />
     <ClInclude Include="include\c3d\components\rendering\light.h" />
     <ClInclude Include="include\c3d\components\rendering\mesh.h" />
+    <ClInclude Include="include\c3d\components\rendering\text2d.h" />
     <ClInclude Include="include\c3d\game.h" />
     <ClInclude Include="include\c3d\gameobject.h" />
     <ClInclude Include="include\c3d\gamescene.h" />
     <ClInclude Include="include\c3d\graphics\defaultrenderer.h" />
+    <ClInclude Include="include\c3d\graphics\renderer2d.h" />
     <ClInclude Include="include\c3d\graphics\splitscreenrenderer.h" />
     <ClInclude Include="include\c3d\physics\collision.h" />
     <ClInclude Include="include\c3d\transformdata.h" />

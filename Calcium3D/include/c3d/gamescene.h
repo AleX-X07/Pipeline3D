@@ -25,6 +25,8 @@ namespace c3d
 	struct GameSubsystems;
 	class  GameObject;
 
+	namespace graphics { class Renderer2D; }
+
 	class GameScene
 		: public ga::core::CttiObject
 		, public ga::core::UiObject
@@ -65,7 +67,7 @@ namespace c3d
 		void Start();
 		void Clear();
 		void Update(c3d::GameSubsystems& subsystems, bool passiveOnly = false);
-		void Render(ga::render::RendererBase& renderPipeline);
+		void Render(ga::render::RendererBase& renderPipeline, c3d::graphics::Renderer2D* renderer2D = nullptr);
 		void PostRender(ga::render::RendererBase& renderPipeline);
 
 		void Serialize(ga::core::CttiSerializer& serializer) const override;

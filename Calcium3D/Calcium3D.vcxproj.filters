@@ -66,6 +66,9 @@
     <Filter Include="Source Files\components\audio">
       <UniqueIdentifier>{78fabd84-973d-43f7-af37-1ac5413951b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader files\2d">
+      <UniqueIdentifier>{48196ca4-2834-4be7-8f85-98786d01627f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\game.cpp">
@@ -145,6 +148,12 @@
     </ClCompile>
     <ClCompile Include="src\graphics\splitscreenrenderer.cpp">
       <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\renderer2d.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\rendering\text2d.cpp">
+      <Filter>Source Files\components\rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +247,12 @@
     <ClInclude Include="include\c3d\graphics\splitscreenrenderer.h">
       <Filter>Header Files\c3d\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="include\c3d\graphics\renderer2d.h">
+      <Filter>Header Files\c3d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\c3d\components\rendering\text2d.h">
+      <Filter>Header Files\c3d\components\rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <SlangCompileTask Include="shaders\c3d\gbuffer.slang">
@@ -254,6 +269,9 @@
     </SlangCompileTask>
     <SlangCompileTask Include="shaders\c3d\splitscreen.slang">
       <Filter>Shader files\c3d</Filter>
+    </SlangCompileTask>
+    <SlangCompileTask Include="shaders\2d\shape2d.slang">
+      <Filter>Shader files\2d</Filter>
     </SlangCompileTask>
   </ItemGroup>
 </Project>

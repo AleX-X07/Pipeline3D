@@ -187,6 +187,13 @@ void GameObject::Render(const ga::Badge<GameScene>&, ga::render::RendererBase& r
 			c->Render(rp);
 }
 
+void GameObject::Render2D(const ga::Badge<GameScene>&, c3d::graphics::Renderer2D& renderer)
+{
+	if (m_pImpl->enabled)
+		for (auto& [type, c] : m_pImpl->components)
+			c->Render2D(renderer);
+}
+
 void GameObject::OnCollisionEnter(const physics::Collision& collision)
 {
 	if (m_pImpl->enabled)

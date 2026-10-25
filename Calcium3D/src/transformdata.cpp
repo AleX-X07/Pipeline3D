@@ -15,19 +15,21 @@ struct TransformData::Internal
 
 	bool        globalMatrixDirty;
 	glm::mat4   globalMatrix;
+
+	bool        hasChanged = true;
 };
 
 /**
  * Transform class somewhat inspired by https://github.com/ddiakopoulos/tinygizmo
  */
 
-// Utility functions for dealing with quaternions
-constexpr glm::vec3 qxdir(const glm::quat& q)                    { return { q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z, (q.x * q.y + q.z * q.w) * 2.0f, (q.z * q.x - q.y * q.w) * 2.0f }; }
-constexpr glm::vec3 qydir(const glm::quat& q)                    { return { (q.x * q.y - q.z * q.w) * 2.0f, q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z, (q.y * q.z + q.x * q.w) * 2.0f }; }
-constexpr glm::vec3 qzdir(const glm::quat& q)                    { return { (q.z * q.x + q.y * q.w) * 2.0f, (q.y * q.z - q.x * q.w) * 2.0f, q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z }; }
-          glm::vec3 qrot(const glm::quat& q, const glm::vec3& v) { return qxdir(q) * v.x + qydir(q) * v.y + qzdir(q) * v.z; }
-constexpr glm::quat qconj(const glm::quat&q)                     { return { -q.x, -q.y, -q.z, q.w}; }
-          glm::quat qinv(const glm::quat& q)                     { return qconj(q) / glm::dot(q, q); }
+ // Utility functions for dealing with quaternions
+constexpr glm::vec3 qxdir(const glm::quat& q) { return { q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z, (q.x * q.y + q.z * q.w) * 2.0f, (q.z * q.x - q.y * q.w) * 2.0f }; }
+constexpr glm::vec3 qydir(const glm::quat& q) { return { (q.x * q.y - q.z * q.w) * 2.0f, q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z, (q.y * q.z + q.x * q.w) * 2.0f }; }
+constexpr glm::vec3 qzdir(const glm::quat& q) { return { (q.z * q.x + q.y * q.w) * 2.0f, (q.y * q.z - q.x * q.w) * 2.0f, q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z }; }
+glm::vec3 qrot(const glm::quat& q, const glm::vec3& v) { return qxdir(q) * v.x + qydir(q) * v.y + qzdir(q) * v.z; }
+constexpr glm::quat qconj(const glm::quat& q) { return { -q.x, -q.y, -q.z, q.w }; }
+glm::quat qinv(const glm::quat& q) { return qconj(q) / glm::dot(q, q); }
 constexpr glm::quat qmul(const glm::quat& a, const glm::quat& b) { return { a.x * b.w + a.w * b.x + a.y * b.z - a.z * b.y, a.y * b.w + a.w * b.y + a.z * b.x - a.x * b.z, a.z * b.w + a.w * b.z + a.x * b.y - a.y * b.x, a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z }; }
 
 
@@ -48,7 +50,7 @@ TransformData::TransformData()
 	Parent = nullptr;
 	Parent.OnChange([this]() {
 		m_pImpl->globalMatrixDirty = true;
-	});
+		});
 }
 
 TransformData::TransformData(const ga::Badge<GameObject>&, GameObject* object)
@@ -94,6 +96,11 @@ GameObject* TransformData::GetGameObject()
 	return m_pImpl->object;
 }
 
+bool TransformData::HasChanged() const
+{
+	return m_pImpl->hasChanged;
+}
+
 const bool TransformData::IsDirty() const
 {
 	return m_pImpl->localMatrixDirty || m_pImpl->globalMatrixDirty;
@@ -101,6 +108,8 @@ const bool TransformData::IsDirty() const
 
 void TransformData::UpdateMatrices()
 {
+	m_pImpl->hasChanged = false;
+
 	if (m_pImpl->localMatrixDirty)
 	{
 		m_pImpl->localMatrix = glm::mat4(
@@ -110,9 +119,13 @@ void TransformData::UpdateMatrices()
 			glm::vec4(Position(), 1.0f)
 		);
 
-		m_pImpl->localMatrixDirty  = false;
+		m_pImpl->localMatrixDirty = false;
 		m_pImpl->globalMatrixDirty = true;
 	}
+
+	if (Parent())
+		if (Parent()->HasChanged())
+			m_pImpl->globalMatrixDirty = true;
 
 	if (m_pImpl->globalMatrixDirty)
 	{
@@ -120,8 +133,9 @@ void TransformData::UpdateMatrices()
 		if (Parent() != nullptr)
 			upperMatrix = Parent.ConstRef()->GlobalMatrix();
 
-		m_pImpl->globalMatrix      = m_pImpl->localMatrix * upperMatrix;
+		m_pImpl->globalMatrix = m_pImpl->localMatrix * upperMatrix;
 		m_pImpl->globalMatrixDirty = false;
+		m_pImpl->hasChanged = true;
 	}
 }
 
@@ -205,11 +219,11 @@ void TransformData::RenderUi()
 {
 	if (ImGui::DragFloat3("Position", (float*)Position.operator->(), 1.0f, -100000.0f, 100000.0f, "%.2f", 1.0f))
 		Position.TriggerChanged();
-	
+
 	glm::vec3 eulerAngles = glm::eulerAngles(Orientation.ConstRef());
 	if (ImGui::DragFloat3("Orientation", (float*)(&eulerAngles), 1.0f, -100000.0f, 100000.0f, "%.2f", 1.0f))
 		Orientation = glm::quat(eulerAngles);
-	
+
 	if (ImGui::DragFloat3("Scale", (float*)Scale.operator->(), 1.0f, -100000.0f, 100000.0f, "%.2f", 1.0f))
 		Scale.TriggerChanged();
 }

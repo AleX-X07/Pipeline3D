@@ -41,6 +41,7 @@ namespace c3d
 
 		GameObject* GetGameObject();
 
+		bool HasChanged() const;
 		bool IsScaleUniform() const;
 
 		const bool       IsDirty() const;

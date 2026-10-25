@@ -11,6 +11,8 @@
 #include <gallium/platform/platform.h>
 #include <gallium/render/rendererbase.h>
 
+#include <c3d/graphics/renderer2d.h>
+
 #include <map>
 
 #include <reactphysics3d/reactphysics3d.h>
@@ -681,7 +683,7 @@ void GameScene::Update(c3d::GameSubsystems& subsystems, bool passiveOnly /* = fa
 	m_pImpl->processing = false;
 }
 
-void GameScene::Render(ga::render::RendererBase& renderPipeline)
+void GameScene::Render(ga::render::RendererBase& renderPipeline, c3d::graphics::Renderer2D* renderer2D /* = nullptr */)
 {
 	if (m_pImpl->cameras.empty())
 		throw std::runtime_error("Scene.Render: Cannot render a scene without an active camera");
@@ -707,6 +709,10 @@ void GameScene::Render(ga::render::RendererBase& renderPipeline)
 
 		for (auto& object : objects)
 			object->Render({}, renderPipeline);
+
+		if (renderer2D)
+			for (auto& object : objects)
+				object->Render2D({}, *renderer2D);
 	}
 
 	for (auto& c : m_pImpl->cameras)

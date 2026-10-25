@@ -22,6 +22,8 @@ namespace c3d
 	class GameScene;
 	class Component;
 
+	namespace graphics { class Renderer2D; }
+
 	class GameObject
 		: public ga::core::CttiObject
 		, public ga::core::UiObject
@@ -91,6 +93,7 @@ namespace c3d
 		void Update(const ga::Badge<GameScene>& , float t, float dt, c3d::GameSubsystems& subsystems);
 		void LateUpdate(const ga::Badge<GameScene>&, float t, float dt, c3d::GameSubsystems& subsystems);
 		void Render(const ga::Badge<GameScene>&, ga::render::RendererBase& rp);
+		void Render2D(const ga::Badge<GameScene>&, c3d::graphics::Renderer2D& renderer);
 
 		void OnCollisionEnter(const physics::Collision& collision);
 		void OnCollisionStay(const physics::Collision& collision);

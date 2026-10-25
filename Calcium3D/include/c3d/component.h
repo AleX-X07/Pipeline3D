@@ -16,6 +16,8 @@ namespace c3d
 	struct GameSubsystems;
 	class GameObject;
 
+	namespace graphics { class Renderer2D; }
+
 	class Component
 		: public ga::core::CttiObject
 		, public ga::core::UiObject
@@ -39,6 +41,7 @@ namespace c3d
 		virtual void Update(float t, float dt, c3d::GameSubsystems& subsystems)      {}
 		virtual void LateUpdate(float t, float dt, c3d::GameSubsystems& subsystems)  {}
 		virtual void Render(ga::render::RendererBase&)                               {}
+		virtual void Render2D(c3d::graphics::Renderer2D&)                            {}
 		virtual void OnEnable()                                                      {}
 		virtual void OnDisable()                                                     {}
 		virtual void OnCollisionEnter(const physics::Collision& collision)           {}

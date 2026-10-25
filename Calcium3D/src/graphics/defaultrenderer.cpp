@@ -209,12 +209,15 @@ void DefaultRenderer::Internal::RenderGeometries(const ga::gpu::RenderEncoder& e
 				continue;
 
 			auto& prim = meshInstance->mesh->primitives[i];
+			uint32_t primMaterialIndex = (meshInstance->overrideMaterial != uint32_t(-1))
+				? meshInstance->overrideMaterial
+				: prim.materialIndex;
 
 			uint32_t materialIndex = uint32_t(-1);
 
-			if (prim.materialIndex != uint32_t(-1))
+			if (primMaterialIndex != uint32_t(-1))
 			{
-				auto& material = ga::assets::AssetManager::Global().MaterialLibrary().ValueOf(prim.materialIndex);
+				auto& material = ga::assets::AssetManager::Global().MaterialLibrary().ValueOf(primMaterialIndex);
 				materialIndex = uint32_t(materials.size());
 
 				materials.push_back(Material {
